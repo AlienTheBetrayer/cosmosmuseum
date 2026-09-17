@@ -1,0 +1,15 @@
+/* setup */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* css/tailwind-specific */
+@import "./root.css";
+@import "./base.css";
+@import "./inline.css";
+
+/* themes */
+@import "./themes/light.css";
+@import "./themes/dark.css";
+
+@import "./utilities.css";
