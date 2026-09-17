@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { YouTubeEvent } from "react-youtube";
 
 export const useVideoIFrame = () => {
+  const [playing, setPlaying] = useState<boolean>(false);
   const videoId = "2RyoVNMUbpM";
 
   const opts = useMemo(() => {
@@ -26,10 +27,14 @@ export const useVideoIFrame = () => {
     };
   }, [videoId]);
 
-  const onReady = useCallback((event: YouTubeEvent) => {
+  const onStateChange = useCallback((event: YouTubeEvent) => {
     event.target.mute();
     event.target.playVideo();
+
+    if (event.data === 1) {
+      setPlaying(true);
+    }
   }, []);
 
-  return useMemo(() => ({ videoId, opts, onReady }), []);
+  return useMemo(() => ({ videoId, opts, onStateChange, playing }), [videoId, opts, onStateChange, playing]);
 };

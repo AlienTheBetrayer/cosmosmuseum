@@ -13,6 +13,7 @@ export * from "./input-group";
 export * from "./input";
 export * from "./item";
 export * from "./label";
+export * from "./spinner";
 export * from "./popover";
 export * from "./providers/MasterProvider";
 export * from "./providers/ThemeProvider";

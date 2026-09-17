@@ -2,12 +2,14 @@
 
 import { useThemes } from "@/components/themes/hooks/useThemes";
 import { ThemeButton } from "@/components/themes/ui/ThemeButton";
+import { useMounted } from "@/shared/hooks/useMounted";
 import { cn } from "cn";
 import { Monitor, Moon, Sun } from "lucide-react";
 
 export const ThemeList = ({ className }: { className?: string }) => {
   // theme logic
   const { setTheme, theme } = useThemes();
+  const { mounted } = useMounted();
 
   // jsx
   return (
@@ -16,11 +18,12 @@ export const ThemeList = ({ className }: { className?: string }) => {
         "flex rounded-full border-1 border-foreground/10 h-8",
         className ?? "",
       )}
+      suppressHydrationWarning
     >
       <li>
         <ThemeButton
           onClick={() => setTheme("light")}
-          isSelected={theme === "light"}
+          isSelected={mounted && theme === "light"}
         >
           <Sun />
         </ThemeButton>
@@ -29,7 +32,7 @@ export const ThemeList = ({ className }: { className?: string }) => {
       <li>
         <ThemeButton
           onClick={() => setTheme("system")}
-          isSelected={theme === "system"}
+          isSelected={mounted && theme === "system"}
         >
           <Monitor />
         </ThemeButton>
@@ -38,7 +41,7 @@ export const ThemeList = ({ className }: { className?: string }) => {
       <li>
         <ThemeButton
           onClick={() => setTheme("dark")}
-          isSelected={theme === "dark"}
+          isSelected={mounted && theme === "dark"}
         >
           <Moon />
         </ThemeButton>
