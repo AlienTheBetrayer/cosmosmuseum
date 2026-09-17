@@ -1,6 +1,6 @@
 "use client";
 
-import { useVideoIFrame } from "@/components/videoiframe/useVideoIFrame";
+import { useVideoIFrame } from "@/components/videoiframe/hooks/useVideoIFrame";
 import YouTube from "react-youtube";
 
 export default function BackgroundVideo() {
