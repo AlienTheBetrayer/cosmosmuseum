@@ -14,7 +14,7 @@ export const Menu = ({ onClose }: { onClose: () => void }) => {
     >
       <ul className="flex flex-col gap-2 w-full h-full p-4">
         <li>
-          <ul className="flex flex-col gap-2 **:w-full [&_a]:p-8 [&_a]:not-hover:bg-black/50 [&_span]:text-center">
+          <ul className="flex flex-col gap-2 **:w-full [&_a]:p-8 [&_a]:not-hover:bg-black/50 [&_span]:text-center [&_span]:text-white">
             <MiddleLinks variant="ghost" />
           </ul>
         </li>

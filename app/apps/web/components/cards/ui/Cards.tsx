@@ -43,6 +43,30 @@ export const Cards = () => {
         <li>
           <Card src="/exhibits/exhibit9.jpg"></Card>
         </li>
+
+        <li>
+          <Card src="/exhibits/exhibit10.jpg"></Card>
+        </li>
+
+        <li>
+          <Card src="/exhibits/exhibit11.jpg"></Card>
+        </li>
+
+        <li>
+          <Card src="/exhibits/exhibit12.jpg"></Card>
+        </li>
+
+        <li>
+          <Card src="/exhibits/exhibit13.jpg"></Card>
+        </li>
+
+        <li>
+          <Card src="/exhibits/exhibit14.jpg"></Card>
+        </li>
+
+        <li>
+          <Card src="/exhibits/exhibit15.jpg"></Card>
+        </li>
       </ul>
     </div>
   );

@@ -5,8 +5,9 @@ import { Menu } from "@/components/header/ui/Menu";
 import { MiddleLinks } from "@/components/header/ui/MiddleLinks";
 import { ThemeList } from "@/components/themes/ui/ThemeList";
 import { Button } from "@/shared/ui";
-import { Menu as MenuIcon, Rocket } from "lucide-react";
+import { Menu as MenuIcon } from "lucide-react";
 import { AnimatePresence } from "motion/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -26,7 +27,7 @@ export const Header = () => {
             href="/"
             className="md:flex hidden items-center gap-1 justify-self-start"
           >
-            <Rocket className="size-7" />
+            <Image alt="nasa" src="/logos/nasa.png" width={48} height={48} />
             <span className="text-3xl font-extrabold">COSMOS</span>
           </Link>
 
