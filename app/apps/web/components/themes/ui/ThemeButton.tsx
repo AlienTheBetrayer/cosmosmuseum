@@ -12,7 +12,7 @@ export const ThemeButton = ({
     <Button
       className={cn(
         "aspect-square rounded-full hover:bg-background/30",
-        isSelected ? "not-hover:bg-background/75" : "",
+        isSelected ? "not-hover:bg-foreground/6" : "",
       )}
       variant="ghost"
       onClick={onClick}

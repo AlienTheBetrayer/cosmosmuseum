@@ -1,12 +1,18 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { YouTubeEvent } from "react-youtube";
 
 export const useVideoIFrame = () => {
+  // states
   const [playing, setPlaying] = useState<boolean>(false);
-  const videoId = "2RyoVNMUbpM";
 
+  // refs
+  const mainPlayer = useRef<YT.Player | null>(null);
+  const ambientPlayer = useRef<YT.Player | null>(null);
+
+  // constants
+  const videoId = "2RyoVNMUbpM";
   const opts = useMemo(() => {
     return {
       width: "100%",
@@ -27,6 +33,27 @@ export const useVideoIFrame = () => {
     };
   }, [videoId]);
 
+  // syncing
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const main = mainPlayer.current;
+      const ambient = ambientPlayer.current;
+      if (!main || !ambient) return;
+      if (typeof main.getCurrentTime !== "function") return; // guard, player not fully ready
+
+      const mainTime = main.getCurrentTime();
+      const bgTime = ambient.getCurrentTime();
+
+      const drift = Math.abs(mainTime - bgTime);
+      if (drift > 0.35) {
+        ambient.seekTo(mainTime, true);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // functions
   const onStateChange = useCallback((event: YouTubeEvent) => {
     event.target.mute();
     event.target.playVideo();
@@ -36,5 +63,23 @@ export const useVideoIFrame = () => {
     }
   }, []);
 
-  return useMemo(() => ({ videoId, opts, onStateChange, playing }), [videoId, opts, onStateChange, playing]);
+  const onMainReady = useCallback((e: YouTubeEvent) => {
+    mainPlayer.current = e.target;
+  }, []);
+
+  const onAmbientReady = useCallback((e: YouTubeEvent) => {
+    ambientPlayer.current = e.target;
+  }, []);
+
+  return useMemo(
+    () => ({
+      videoId,
+      opts,
+      playing,
+      onMainReady,
+      onAmbientReady,
+      onStateChange,
+    }),
+    [videoId, opts, playing, onMainReady, onAmbientReady, onStateChange],
+  );
 };
