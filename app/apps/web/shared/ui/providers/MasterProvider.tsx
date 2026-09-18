@@ -6,10 +6,7 @@ export const MasterProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ThemeProvider>
       <TooltipProvider>
-        <ContextMenuGroup>
-
-        {children}
-        </ContextMenuGroup>
+        <ContextMenuGroup>{children}</ContextMenuGroup>
       </TooltipProvider>
     </ThemeProvider>
   );

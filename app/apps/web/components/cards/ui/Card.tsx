@@ -11,14 +11,13 @@ export const Card = ({ src }: { src: string }) => {
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
-    
+
     // Calculate cursor position relative to card center (-0.5 to 0.5)
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
 
-    // Rotate up to 15 degrees max
     setRotate({
-      x: -y * 20, 
+      x: -y * 20,
       y: x * 20,
     });
   };
@@ -27,7 +26,7 @@ export const Card = ({ src }: { src: string }) => {
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    setRotate({ x: 0, y: 0 }); // Reset on leave
+    setRotate({ x: 0, y: 0 }); 
   };
 
   return (
@@ -41,11 +40,12 @@ export const Card = ({ src }: { src: string }) => {
           transform: isHovered
             ? `rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) scale3d(1.05, 1.05, 1.05)`
             : "rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)",
-          transition: isHovered ? "transform 0.1s ease-out" : "transform 0.5s ease-out",
+          transition: isHovered
+            ? "transform 0.1s ease-out"
+            : "transform 0.5s ease-out",
         }}
         className="relative h-100 overflow-hidden rounded-4xl bg-card outline-2 outline-foreground/10 shadow-xl transition-all duration-300 transform-gpu preserve-3d group cursor-pointer"
       >
-        {/* Background Image with slight zoom */}
         <Image
           alt={src}
           src={src}
@@ -54,10 +54,7 @@ export const Card = ({ src }: { src: string }) => {
           className="w-full h-full transition-transform duration-500 group-hover:scale-110"
         />
 
-        {/* Dynamic Light/Glow Overlay */}
-        <div 
-          className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-tr from-transparent via-white/10 to-transparent" 
-        />
+        <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-tr from-transparent via-white/10 to-transparent" />
       </article>
     </div>
   );

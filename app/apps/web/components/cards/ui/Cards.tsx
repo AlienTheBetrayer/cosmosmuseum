@@ -2,7 +2,7 @@ import { Card } from "@/components/cards/ui/Card";
 
 export const Cards = () => {
   return (
-    <div className="flex flex-col gap-8 justify-center items-center gap-2 w-full max-w-6xl mx-auto h-full">
+    <div className="flex flex-col gap-8 justify-center items-center gap-2 w-full max-w-6xl mx-auto h-full ">
       <h2 className="text-3xl font-semibold" id="exhibits">
         Exhibits
       </h2>

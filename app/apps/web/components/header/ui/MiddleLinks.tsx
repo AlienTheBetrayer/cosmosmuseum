@@ -1,7 +1,11 @@
 import { Button, ButtonProps } from "@/shared/ui";
 import Link from "next/link";
 
-export const MiddleLinks = ({ variant }: { variant?: ButtonProps["variant"]}) => {
+export const MiddleLinks = ({
+  variant,
+}: {
+  variant?: ButtonProps["variant"];
+}) => {
   return (
     <>
       <li>
