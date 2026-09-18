@@ -5,7 +5,7 @@ import { Menu } from "@/components/header/ui/Menu";
 import { MiddleLinks } from "@/components/header/ui/MiddleLinks";
 import { Socials } from "@/components/header/ui/socials/Socials";
 import { ThemeList } from "@/components/themes/ui/ThemeList";
-import { Button } from "@/shared/ui";
+import { Button, Separator } from "@/shared/ui";
 import { Menu as MenuIcon, Rocket, X } from "lucide-react";
 import { AnimatePresence } from "motion/react";
 import Link from "next/link";
@@ -49,6 +49,8 @@ export const Header = () => {
           <div className="flex gap-1 items-center justify-self-end md:flex hidden">
             <Socials />
             <ThemeList />
+
+            <Separator orientation="vertical" className="h-6 my-auto mx-1" />
 
             <AuthButton />
           </div>

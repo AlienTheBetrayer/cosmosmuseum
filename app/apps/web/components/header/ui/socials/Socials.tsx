@@ -7,7 +7,7 @@ export const Socials = () => {
     <Popover>
       <PopoverTrigger
         render={
-          <Button className="px-1 group" variant="ghost">
+          <Button className="px-0 group" variant="ghost">
             <ul className="flex w-full h-full">
               <li className="z-2">
                 <SocialImage src="/logos/facebook.png" />

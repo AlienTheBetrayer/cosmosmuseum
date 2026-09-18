@@ -6,7 +6,7 @@ export const Tags = ({ className }: { className?: string }) => {
   return (
     <ul
       className={cn(
-        "flex sm:flex-row flex-col sm:gap-8 justify-center! items-center! rounded-2xl bg-background/95",
+        "flex sm:flex-row flex-col sm:gap-8 justify-center! items-center! rounded-2xl bg-background/50 z-2",
         className ?? "",
       )}
     >

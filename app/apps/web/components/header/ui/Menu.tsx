@@ -2,6 +2,7 @@ import { AuthButton } from "@/components/auth/ui/AuthButton";
 import { MiddleLinks } from "@/components/header/ui/MiddleLinks";
 import { SocialLinksList } from "@/components/header/ui/socials/SocialLinksList";
 import { ThemeList } from "@/components/themes/ui/ThemeList";
+import { Separator } from "@/shared/ui";
 import { motion } from "motion/react";
 
 export const Menu = ({ onClose }: { onClose: () => void }) => {
@@ -21,7 +22,7 @@ export const Menu = ({ onClose }: { onClose: () => void }) => {
         </li>
 
         <li>
-          <hr />
+          <Separator />
         </li>
 
         <li className="[&_a]:p-8 [&_a]:not-hover:bg-background/50 [&_span]:text-center [&_span]:text-foreground [&_a]:justify-center">
@@ -29,13 +30,13 @@ export const Menu = ({ onClose }: { onClose: () => void }) => {
         </li>
 
         <li>
-          <hr />
+          <Separator />
         </li>
 
         <li>
           <ul className="flex flex-col gap-2">
             <li className="[&_button]:p-8 [&_button]:text-foreground">
-              <ThemeList className="h-auto bg-background/50"/>
+              <ThemeList className="h-auto bg-background/50" />
             </li>
 
             <li className="*:w-full [&_button]:p-8">

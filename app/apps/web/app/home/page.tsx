@@ -1,6 +1,7 @@
 import { Cards } from "@/components/cards/ui/Cards";
 import { Tags } from "@/components/videoiframe/ui/Tags";
 import BackgroundVideo from "@/components/videoiframe/ui/VideoIFrame";
+import { Separator } from "@/shared/ui";
 
 export default function Home() {
   return (
@@ -12,9 +13,13 @@ export default function Home() {
         </div>
       </div>
 
+      <Separator className="w-full max-w-6xl mx-auto" />
+
       <div className="p-2">
         <Cards />
       </div>
+
+      <Separator className="w-full max-w-6xl mx-auto" />
     </div>
   );
 }
