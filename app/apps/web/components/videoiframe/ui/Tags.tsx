@@ -5,7 +5,10 @@ import { Calendar, Star, Users } from "lucide-react";
 export const Tags = ({ className }: { className?: string }) => {
   return (
     <ul
-      className={cn("flex sm:flex-row flex-col sm:gap-8 justify-between items-center", className ?? "")}
+      className={cn(
+        "flex sm:flex-row flex-col sm:gap-8 justify-center! items-center! rounded-2xl bg-background/95",
+        className ?? "",
+      )}
     >
       <li>
         <Tag icon={<Users />} number={"3M+"} text={"Total Visits"} />

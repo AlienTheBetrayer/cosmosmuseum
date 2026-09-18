@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export const Header = () => {
   return (
-    <header className="sticky top-0 left-0 right-0 p-1 z-10 bg-background/95">
+    <header className="sticky top-0 left-0 right-0 p-1 z-10 bg-background/95 backdrop-blur-sm">
       <nav className="grid grid-cols-3 w-full mx-auto h-12 p-2 rounded-3xl items-center">
         <Link href="/" className="flex items-center gap-1 justify-self-start">
           <Rocket className="size-7" />
@@ -20,44 +20,21 @@ export const Header = () => {
             <Button
               variant="ghost"
               render={
-                <Link href="/home">
+                <Link href="#home">
                   <span>Home</span>
                 </Link>
               }
-              nativeButton={false}
-            />
+            >
+              <span>Home</span>
+            </Button>
           </li>
 
           <li>
             <Button
               variant="ghost"
               render={
-                <Link href="/home">
-                  <span>Blog</span>
-                </Link>
-              }
-              nativeButton={false}
-            />
-          </li>
-
-          <li>
-            <Button
-              variant="ghost"
-              render={
-                <Link href="/home">
-                  <span>Community</span>
-                </Link>
-              }
-              nativeButton={false}
-            />
-          </li>
-
-          <li>
-            <Button
-              variant="ghost"
-              render={
-                <Link href="/home">
-                  <span>Help</span>
+                <Link href="#exhibits">
+                  <span>Exhibits</span>
                 </Link>
               }
               nativeButton={false}
