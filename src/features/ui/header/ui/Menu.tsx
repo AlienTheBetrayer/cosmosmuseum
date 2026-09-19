@@ -39,7 +39,7 @@ export const Menu = ({ onClose }: { onClose: () => void }) => {
               <ThemeList className="h-auto bg-background/50" />
             </li>
 
-            <li className="*:w-full [&_button]:p-8">
+            <li className="*:w-full [&_a]:p-8">
               <AuthButton />
             </li>
           </ul>

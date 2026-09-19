@@ -13,7 +13,7 @@ export const MiddleLinks = ({
           variant={variant ?? "ghost"}
           nativeButton={false}
           render={
-            <Link href="#home">
+            <Link href="/home/#home">
               <span>Home</span>
             </Link>
           }
@@ -27,7 +27,7 @@ export const MiddleLinks = ({
           variant={variant ?? "ghost"}
           nativeButton={false}
           render={
-            <Link href="#exhibits">
+            <Link href="/home/#exhibits">
               <span>Exhibits</span>
             </Link>
           }

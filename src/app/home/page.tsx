@@ -5,7 +5,7 @@ import { Separator } from "@/shared/ui";
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-8 overflow-x-hidden" id="home">
+    <main className="flex flex-col gap-8 overflow-x-hidden" id="home">
       <div className="w-full h-[110vh] p-4 overflow-hidden">
         <div className="flex flex-col gap-4 w-full h-full outline-4 outline-foreground/5 bg-foreground/5 rounded-xl">
           <BackgroundVideo />
@@ -20,6 +20,6 @@ export default function Home() {
       </div>
 
       <Separator className="w-full max-w-6xl mx-auto" />
-    </div>
+    </main>
   );
 }
