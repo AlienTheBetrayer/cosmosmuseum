@@ -4,7 +4,7 @@ export const Cards = () => {
   return (
     <div className="flex flex-col gap-8 justify-center items-center gap-2 w-full max-w-6xl mx-auto h-full ">
       <h2 className="text-3xl font-semibold" id="exhibits">
-        Exhibits
+        Експонати
       </h2>
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full gap-4">

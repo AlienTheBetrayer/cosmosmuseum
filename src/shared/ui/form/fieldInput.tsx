@@ -1,14 +1,19 @@
 import { FieldValues, useFormContext, Controller } from "react-hook-form";
 import { Input } from "../input";
-import { Field, FieldError, FieldLabel } from "../field";
+import { Field, FieldDescription, FieldError, FieldLabel } from "../field";
 import { WrapperControllerProps } from "@/shared/ui/form/types/props";
 
 export default function FormInput<T extends FieldValues>({
   name,
   label,
+  action,
+  description,
   id,
   ...props
-}: WrapperControllerProps<T, typeof Input>) {
+}: WrapperControllerProps<T, typeof Input> & {
+  action?: React.ReactNode;
+  description?: string;
+}) {
   const { control } = useFormContext<T>();
 
   return (
@@ -17,7 +22,13 @@ export default function FormInput<T extends FieldValues>({
       control={control}
       render={({ field, fieldState }) => (
         <Field data-invalid={fieldState.invalid}>
-          <FieldLabel htmlFor={id}>{label}</FieldLabel>
+          <div className="w-full flex justify-between">
+            <FieldLabel htmlFor={id}>{label}</FieldLabel>
+
+            {action}
+          </div>
+          
+          {description && <FieldDescription>{description}</FieldDescription>}
 
           <Input
             {...field}
@@ -25,6 +36,7 @@ export default function FormInput<T extends FieldValues>({
             id={id}
             aria-invalid={fieldState.invalid}
           />
+
 
           <FieldError errors={[fieldState.error]} />
         </Field>

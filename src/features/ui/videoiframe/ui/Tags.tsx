@@ -11,15 +11,15 @@ export const Tags = ({ className }: { className?: string }) => {
       )}
     >
       <li>
-        <Tag icon={<Users />} number={"3M+"} text={"Total Visits"} />
+        <Tag icon={<Users />} number={"3М+"} text={"Загальні відвідувачи"} />
       </li>
 
       <li>
-        <Tag icon={<Calendar />} number={"2100+"} text={"Weekly Visits"} />
+        <Tag icon={<Calendar />} number={"2100+"} text={"Тижневі відвідувачі"} />
       </li>
 
       <li>
-        <Tag icon={<Star />} number={"4.7"} text={"Google Rating"} />
+        <Tag icon={<Star />} number={"4.7"} text={"Google рейтинг"} />
       </li>
     </ul>
   );

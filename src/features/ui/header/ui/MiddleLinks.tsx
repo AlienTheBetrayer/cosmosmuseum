@@ -14,11 +14,11 @@ export const MiddleLinks = ({
           nativeButton={false}
           render={
             <Link href="/home/#home">
-              <span>Home</span>
+              <span>Дім</span>
             </Link>
           }
         >
-          <span>Home</span>
+          <span>Дім</span>
         </Button>
       </li>
 
@@ -28,7 +28,7 @@ export const MiddleLinks = ({
           nativeButton={false}
           render={
             <Link href="/home/#exhibits">
-              <span>Exhibits</span>
+              <span>Експонати</span>
             </Link>
           }
         />

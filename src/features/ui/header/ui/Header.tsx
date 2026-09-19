@@ -21,7 +21,7 @@ export const Header = () => {
         <nav className="flex md:grid grid-cols-3 w-full mx-auto h-12 p-2 rounded-3xl items-center">
           <Link href="/" className="flex items-center gap-1 justify-self-start">
             <Rocket width={26} height={26} />
-            <span className="text-2xl font-extrabold">COSMOS</span>
+            <span className="text-2xl font-extrabold">КОСМОС</span>
           </Link>
 
           <Button
@@ -32,12 +32,12 @@ export const Header = () => {
             {openMenu ? (
               <>
                 <X />
-                <span>Close</span>
+                <span>Закрити</span>
               </>
             ) : (
               <>
                 <MenuIcon />
-                <span>Menu</span>
+                <span>Меню</span>
               </>
             )}
           </Button>

@@ -7,7 +7,7 @@ export const AuthButton = () => {
     <Button
       render={
         <Link href="/login">
-          <span>Log In</span>
+          <span>Логін</span>
           <LogIn />
         </Link>
       }

@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className="flex w-screen min-h-screen overflow-x-hidden">
         <MasterProvider>
           <Header />
 
