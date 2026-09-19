@@ -2,10 +2,21 @@
 
 import { QRCodeSVG } from "qrcode.react";
 
-export const QRCodeDisplay = ({ text, size }: { text: string, size: number }) => {
+export const QRCodeDisplay = ({
+  className,
+  text,
+  size,
+}: {
+  className?: string;
+  text: string;
+  size: number;
+}) => {
   return (
-    <div>
-      <QRCodeSVG value={text} size={size} />
-    </div>
+    <QRCodeSVG
+      value={text}
+      size={size}
+      style={{ objectFit: "cover" }}
+      className={className ?? ""}
+    />
   );
-}
+};

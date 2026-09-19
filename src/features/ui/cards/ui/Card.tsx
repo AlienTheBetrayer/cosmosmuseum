@@ -1,5 +1,13 @@
 "use client";
 
+import { QRCodeDisplay } from "@/shared/ui/qrcodedisplay";
+import {
+  motion,
+  MotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "motion/react";
 import Image from "next/image";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 
@@ -18,11 +26,11 @@ type Star = {
   phase: number; // twinkle offset
 };
 
-const PAD = 200; // how far (px) stars can drift past the card's edge
-const MAX_STARS = 1000;
+const PAD = 100; // how far (px) stars can drift past the card's edge
+const MAX_STARS = 100;
 const IDLE_RATE = 0; // stars / second at rest
-const HOVER_RATE = 100; // stars / second while hovered
-const PARALLAX = 4; // px of star shift per degree of card tilt
+const HOVER_RATE = 10; // stars / second while hovered
+const PARALLAX = 1; // px of star shift per degree of card tilt
 // ---------------------------------------------------------------------------
 
 const Starfield = ({ tilt, active }: { tilt: Tilt; active: boolean }) => {
@@ -189,10 +197,71 @@ const Starfield = ({ tilt, active }: { tilt: Tilt; active: boolean }) => {
   );
 };
 
+const rad = (deg: number) => (deg * Math.PI) / 180;
+const Shading = ({
+  shade,
+  glare,
+}: {
+  shade: MotionValue<number>;
+  glare: MotionValue<string>;
+}) => (
+  <>
+    <motion.div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 bg-black"
+      style={{ opacity: shade }}
+    />
+    <motion.div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 mix-blend-overlay"
+      style={{
+        backgroundImage:
+          "linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.35) 50%, transparent 65%)",
+        backgroundSize: "250% 100%",
+        backgroundPositionX: glare,
+      }}
+    />
+  </>
+);
+
 export const Card = ({ src, qrText }: { src: string; qrText: string }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [rotate, setRotate] = useState<Tilt>({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const [flipped, setFlipped] = useState(false);
+  const reduceMotion = useReducedMotion();
+
+  // ---- Flip physics -------------------------------------------------------
+  // Spring gives a natural settle. Raise damping for less wobble, lower for more.
+  const angle = useSpring(0, { stiffness: 110, damping: 15, mass: 1 });
+
+  // 0 when flat to the viewer, 1 when edge-on
+  const edge = useTransform(angle, (v) => Math.abs(Math.sin(rad(v))));
+  const lift = useTransform(edge, (v) => v * 90); // px toward the viewer
+  const roll = useTransform(angle, (v) => Math.sin(rad(v)) * -6); // slight tumble, deg
+  const shade = useTransform(edge, (v) => v * 0.55); // max darkening at edge-on
+  const glare = useTransform(angle, [0, 180], ["150%", "-50%"]);
+  const shadow = useTransform(
+    edge,
+    (v) =>
+      `0 ${10 + v * 40}px ${25 + v * 45}px -5px rgba(0,0,0,${0.12 + v * 0.18})`,
+  );
+  // -------------------------------------------------------------------------
+
+  useEffect(() => {
+    const target = flipped ? 180 : 0;
+    if (reduceMotion) angle.jump(target);
+    else angle.set(target);
+  }, [flipped, reduceMotion, angle]);
+
+  const toggle = () => setFlipped((f) => !f);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggle();
+    }
+  };
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -211,13 +280,20 @@ export const Card = ({ src, qrText }: { src: string; qrText: string }) => {
     setRotate({ x: 0, y: 0 });
   };
 
+  const faceClass =
+    "absolute inset-0 overflow-hidden rounded-4xl bg-card outline-2 outline-foreground/10 [backface-visibility:hidden]";
+
   return (
     <div className="relative [perspective:1000px]">
-      {/* Sits behind the card; stars emerge from its edges */}
       <Starfield tilt={rotate} active={isHovered} />
 
       <article
         ref={cardRef}
+        role="button"
+        tabIndex={0}
+        aria-pressed={flipped}
+        onClick={toggle}
+        onKeyDown={handleKeyDown}
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -229,16 +305,50 @@ export const Card = ({ src, qrText }: { src: string; qrText: string }) => {
             ? "transform 0.1s ease-out"
             : "transform 0.5s ease-out",
         }}
-        className="relative h-100 overflow-hidden rounded-4xl bg-card outline-2 outline-foreground/10 shadow-xl transition-all duration-300 transform-gpu preserve-3d group cursor-pointer"
+        className="group relative h-100 cursor-pointer transform-gpu [transform-style:preserve-3d] focus-visible:outline-none"
       >
-        <Image
-          alt={src}
-          src={src}
-          fill
-          style={{ objectFit: "cover" }}
-          className="w-full h-full transition-transform duration-500 group-hover:scale-110"
-        />
-        <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-tr from-transparent via-white/10 to-transparent" />
+        <motion.div
+          className="relative h-full w-full [transform-style:preserve-3d]"
+          style={{ rotateY: angle, rotateX: roll, z: lift }}
+        >
+          {/* Thickness: thin slices between the faces so the edge is visible mid-turn */}
+          {[-1.5, -0.75, 0, 0.75, 1.5].map((z) => (
+            <motion.div
+              key={z}
+              aria-hidden
+              className="absolute inset-0 rounded-4xl bg-muted shadowed"
+              style={{ z }}
+            />
+          ))}
+
+          <motion.div
+            inert={flipped}
+            className={faceClass}
+            style={{ z: 2, boxShadow: shadow }}
+          >
+            <Image
+              alt={src}
+              src={src}
+              fill
+              style={{ objectFit: "cover" }}
+              className="h-full w-full transition-transform duration-500 group-hover:scale-110"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <Shading shade={shade} glare={glare} />
+          </motion.div>
+
+          <motion.div
+            inert={!flipped}
+            className={faceClass}
+            style={{ z: -2, rotateY: 180, boxShadow: shadow }}
+          >
+            <div className="flex h-full w-full items-center justify-center text-foreground">
+              <QRCodeDisplay text={qrText} size={100} className="w-full h-full"/>
+            </div>
+
+            <Shading shade={shade} glare={glare} />
+          </motion.div>
+        </motion.div>
       </article>
     </div>
   );
