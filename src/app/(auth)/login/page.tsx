@@ -22,7 +22,7 @@ export default function LoginPage() {
 
   // jsx
   return (
-    <Card className="w-128 gap-4">
+    <Card className="w-128 gap-4 shadowed">
       <CardHeader>
         <CardTitle>Логін</CardTitle>
         <CardDescription>
