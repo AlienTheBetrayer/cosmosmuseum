@@ -1,0 +1,13 @@
+// use prisma-8
+// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+
+model Users {
+  id        BigInt       @id(map: "users_pkey") @default(autoincrement())
+  createdAt Timestamptz  @default(now()) @map("created_at")
+  sdfsdf    Real?
+  sdfsdfsdf Timestamptz?
+  sdfsdfddd SmallInt?
+
+  @@rls
+  @@map("users")
+}
