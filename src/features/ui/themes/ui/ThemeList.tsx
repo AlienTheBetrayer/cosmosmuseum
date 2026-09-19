@@ -1,7 +1,7 @@
 "use client";
 
-import { useThemes } from "@/components/themes/hooks/useThemes";
-import { ThemeButton } from "@/components/themes/ui/ThemeButton";
+import { useThemes } from "@/features/ui/themes/hooks/useThemes";
+import { ThemeButton } from "@/features/ui/themes/ui/ThemeButton";
 import { useMounted } from "@/shared/hooks/useMounted";
 import { cn } from "cn";
 import { Monitor, Moon, Sun } from "lucide-react";

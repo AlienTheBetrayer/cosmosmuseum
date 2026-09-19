@@ -1,13 +1,13 @@
 "use client";
 
 import YouTube from "react-youtube";
-import { useVideoIFrame } from "@/components/videoiframe/hooks/useVideoIFrame";
+import { useVideoIFrame } from "@/features/ui/videoiframe/hooks/useVideoIFrame";
 import Image from "next/image";
 import { Spinner } from "@/shared/ui";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "cn";
 
-export default function BackgroundVideo() {
+export const BackgroundVideo = () => {
   // logic
   const { opts, playing, onMainReady, onAmbientReady, onStateChange } =
     useVideoIFrame();
@@ -65,4 +65,4 @@ export default function BackgroundVideo() {
       </div>
     </div>
   );
-}
+};

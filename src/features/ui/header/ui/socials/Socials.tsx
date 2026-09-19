@@ -1,5 +1,5 @@
-import { SocialImage } from "@/components/header/ui/socials/SocialImage";
-import { SocialLinksList } from "@/components/header/ui/socials/SocialLinksList";
+import { SocialImage } from "@/features/ui/header/ui/socials/SocialImage";
+import { SocialLinksList } from "@/features/ui/header/ui/socials/SocialLinksList";
 import { Button, Popover, PopoverContent, PopoverTrigger } from "@/shared/ui";
 
 export const Socials = () => {

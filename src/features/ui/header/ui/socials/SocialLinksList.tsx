@@ -1,5 +1,5 @@
-import { socials } from "@/components/header/lib/socials";
-import { SocialLink } from "@/components/header/ui/socials/SocialLink";
+import { socials } from "@/features/ui/header/lib/socials";
+import { SocialLink } from "@/features/ui/header/ui/socials/SocialLink";
 import { cn } from "cn";
 
 export const SocialLinksList = ({ className }: { className?: string }) => {

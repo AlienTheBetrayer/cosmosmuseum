@@ -1,7 +1,7 @@
-import { AuthButton } from "@/components/auth/ui/AuthButton";
-import { MiddleLinks } from "@/components/header/ui/MiddleLinks";
-import { SocialLinksList } from "@/components/header/ui/socials/SocialLinksList";
-import { ThemeList } from "@/components/themes/ui/ThemeList";
+import { AuthButton } from "@/features/auth/ui/AuthButton";
+import { MiddleLinks } from "@/features/ui/header/ui/MiddleLinks";
+import { SocialLinksList } from "@/features/ui/header/ui/socials/SocialLinksList";
+import { ThemeList } from "@/features/ui/themes/ui/ThemeList";
 import { Separator } from "@/shared/ui";
 import { motion } from "motion/react";
 

@@ -3,78 +3,11 @@
   "targetFamily": "sql",
   "target": "postgres",
   "profileHash": "3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2",
-  "roots": {
-    "users": {
-      "model": "Users",
-      "namespace": "public"
-    }
-  },
+  "roots": {},
   "domain": {
     "namespaces": {
       "public": {
-        "models": {
-          "Users": {
-            "fields": {
-              "createdAt": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "kind": "scalar"
-                }
-              },
-              "id": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int8@1",
-                  "kind": "scalar"
-                }
-              },
-              "sdfsdf": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/float4@1",
-                  "kind": "scalar"
-                }
-              },
-              "sdfsdfddd": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/int2@1",
-                  "kind": "scalar"
-                }
-              },
-              "sdfsdfsdf": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "kind": "scalar"
-                }
-              }
-            },
-            "relations": {},
-            "storage": {
-              "fields": {
-                "createdAt": {
-                  "column": "created_at"
-                },
-                "id": {
-                  "column": "id"
-                },
-                "sdfsdf": {
-                  "column": "sdfsdf"
-                },
-                "sdfsdfddd": {
-                  "column": "sdfsdfddd"
-                },
-                "sdfsdfsdf": {
-                  "column": "sdfsdfsdf"
-                }
-              },
-              "namespaceId": "public",
-              "table": "users"
-            }
-          }
-        }
+        "models": {}
       }
     }
   },
@@ -82,67 +15,13 @@
     "namespaces": {
       "public": {
         "entries": {
-          "rls": {
-            "users": {
-              "kind": "rls",
-              "namespaceId": "public",
-              "tableName": "users"
-            }
-          },
-          "table": {
-            "users": {
-              "columns": {
-                "created_at": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "default": {
-                    "expression": "now()",
-                    "kind": "function"
-                  },
-                  "nativeType": "timestamptz",
-                  "nullable": false
-                },
-                "id": {
-                  "codecId": "pg/int8@1",
-                  "default": {
-                    "expression": "autoincrement()",
-                    "kind": "function"
-                  },
-                  "nativeType": "int8",
-                  "nullable": false
-                },
-                "sdfsdf": {
-                  "codecId": "pg/float4@1",
-                  "nativeType": "float4",
-                  "nullable": true
-                },
-                "sdfsdfddd": {
-                  "codecId": "pg/int2@1",
-                  "nativeType": "int2",
-                  "nullable": true
-                },
-                "sdfsdfsdf": {
-                  "codecId": "pg/timestamptz-temporal@1",
-                  "nativeType": "timestamptz",
-                  "nullable": true
-                }
-              },
-              "foreignKeys": [],
-              "indexes": [],
-              "primaryKey": {
-                "columns": [
-                  "id"
-                ],
-                "name": "users_pkey"
-              },
-              "uniques": []
-            }
-          }
+          "table": {}
         },
         "id": "public",
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "b421cec49ae0edeb224586a135bb6aae2c8644fca2150b69ff5ede1deac06486"
+    "storageHash": "0c0734babd6eeb868fee1f281ca96963022475611560e9f170f465daa35f8599"
   },
   "capabilities": {
     "postgres": {

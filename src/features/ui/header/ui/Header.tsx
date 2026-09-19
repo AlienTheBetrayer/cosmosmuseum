@@ -1,10 +1,10 @@
 "use client";
 
-import { AuthButton } from "@/components/auth/ui/AuthButton";
-import { Menu } from "@/components/header/ui/Menu";
-import { MiddleLinks } from "@/components/header/ui/MiddleLinks";
-import { Socials } from "@/components/header/ui/socials/Socials";
-import { ThemeList } from "@/components/themes/ui/ThemeList";
+import { AuthButton } from "@/features/auth/ui/AuthButton";
+import { Menu } from "@/features/ui/header/ui/Menu";
+import { MiddleLinks } from "@/features/ui/header/ui/MiddleLinks";
+import { Socials } from "@/features/ui/header/ui/socials/Socials";
+import { ThemeList } from "@/features/ui/themes/ui/ThemeList";
 import { Button, Separator } from "@/shared/ui";
 import { Menu as MenuIcon, Rocket, X } from "lucide-react";
 import { AnimatePresence } from "motion/react";

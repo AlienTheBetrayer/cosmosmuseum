@@ -1,4 +1,4 @@
-import { Tag } from "@/components/videoiframe/ui/Tag";
+import { Tag } from "@/features/ui/videoiframe/ui/Tag";
 import { cn } from "cn";
 import { Calendar, Star, Users } from "lucide-react";
 

@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'b421cec49ae0edeb224586a135bb6aae2c8644fca2150b69ff5ede1deac06486'>;
+  StorageHashBase<'0c0734babd6eeb868fee1f281ca96963022475611560e9f170f465daa35f8599'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -239,66 +239,15 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
     : CodecTypes[CodecId]['json']
   : Encoded;
 
-export type FieldOutputTypes = {
-  readonly public: {
-    readonly Users: {
-      readonly id: CodecTypes['pg/int8@1']['output'];
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly sdfsdf: CodecTypes['pg/float4@1']['output'] | null;
-      readonly sdfsdfsdf: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
-      readonly sdfsdfddd: CodecTypes['pg/int2@1']['output'] | null;
-    };
-  };
-};
-export type FieldInputTypes = {
-  readonly public: {
-    readonly Users: {
-      readonly id: CodecTypes['pg/int8@1']['input'];
-      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly sdfsdf: CodecTypes['pg/float4@1']['input'] | null;
-      readonly sdfsdfsdf: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
-      readonly sdfsdfddd: CodecTypes['pg/int2@1']['input'] | null;
-    };
-  };
-};
-export type StorageColumnTypes = {
-  readonly public: {
-    readonly users: {
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
-      readonly id: CodecTypes['pg/int8@1']['output'];
-      readonly sdfsdf: CodecTypes['pg/float4@1']['output'] | null;
-      readonly sdfsdfddd: CodecTypes['pg/int2@1']['output'] | null;
-      readonly sdfsdfsdf: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
-    };
-  };
-};
-export type StorageColumnInputTypes = {
-  readonly public: {
-    readonly users: {
-      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
-      readonly id: CodecTypes['pg/int8@1']['input'];
-      readonly sdfsdf: CodecTypes['pg/float4@1']['input'] | null;
-      readonly sdfsdfddd: CodecTypes['pg/int2@1']['input'] | null;
-      readonly sdfsdfsdf: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
-    };
-  };
-};
+export type FieldOutputTypes = { readonly public: Record<string, never> };
+export type FieldInputTypes = { readonly public: Record<string, never> };
+export type StorageColumnTypes = { readonly public: {} };
+export type StorageColumnInputTypes = { readonly public: {} };
 
-export namespace Models {
-  export type public_Users = {
-    id: CodecTypes['pg/int8@1']['output'];
-    createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-    sdfsdf: CodecTypes['pg/float4@1']['output'] | null;
-    sdfsdfsdf: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
-    sdfsdfddd: CodecTypes['pg/int2@1']['output'] | null;
-    readonly [RelationKeys]?: never;
-  };
-}
+export namespace Models {}
 
 export declare const models: {
-  public: {
-    Users: Models.public_Users;
-  };
+  public: {};
 };
 
 export type TypeMaps = TypeMapsType<
@@ -317,48 +266,7 @@ type ContractBase = Omit<
       readonly public: {
         readonly id: 'public';
         readonly kind: 'postgres-schema';
-        readonly entries: {
-          readonly table: {
-            readonly users: {
-              columns: {
-                readonly id: {
-                  readonly nativeType: 'int8';
-                  readonly codecId: 'pg/int8@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'function';
-                    readonly expression: 'autoincrement()';
-                  };
-                };
-                readonly created_at: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
-                  readonly nullable: false;
-                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
-                };
-                readonly sdfsdf: {
-                  readonly nativeType: 'float4';
-                  readonly codecId: 'pg/float4@1';
-                  readonly nullable: true;
-                };
-                readonly sdfsdfsdf: {
-                  readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
-                  readonly nullable: true;
-                };
-                readonly sdfsdfddd: {
-                  readonly nativeType: 'int2';
-                  readonly codecId: 'pg/int2@1';
-                  readonly nullable: true;
-                };
-              };
-              primaryKey: { readonly columns: readonly ['id']; readonly name: 'users_pkey' };
-              uniques: readonly [];
-              indexes: readonly [];
-              foreignKeys: readonly [];
-            };
-          };
-        };
+        readonly entries: { readonly table: {} };
       };
     };
     readonly storageHash: StorageHash;
@@ -367,56 +275,11 @@ type ContractBase = Omit<
 > & {
   readonly target: 'postgres';
   readonly targetFamily: 'sql';
-  readonly roots: {
-    readonly users: { readonly namespace: 'public' & NamespaceId; readonly model: 'Users' };
-  };
+  readonly roots: Record<string, never>;
   readonly domain: {
     readonly namespaces: {
       readonly public: {
-        readonly models: {
-          readonly Users: {
-            readonly fields: {
-              readonly id: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int8@1' };
-              };
-              readonly createdAt: {
-                readonly nullable: false;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
-                };
-              };
-              readonly sdfsdf: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/float4@1' };
-              };
-              readonly sdfsdfsdf: {
-                readonly nullable: true;
-                readonly type: {
-                  readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-temporal@1';
-                };
-              };
-              readonly sdfsdfddd: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int2@1' };
-              };
-            };
-            readonly relations: Record<string, never>;
-            readonly storage: {
-              readonly table: 'users';
-              readonly namespaceId: 'public';
-              readonly fields: {
-                readonly id: { readonly column: 'id' };
-                readonly createdAt: { readonly column: 'created_at' };
-                readonly sdfsdf: { readonly column: 'sdfsdf' };
-                readonly sdfsdfsdf: { readonly column: 'sdfsdfsdf' };
-                readonly sdfsdfddd: { readonly column: 'sdfsdfddd' };
-              };
-            };
-          };
-        };
+        readonly models: Record<string, never>;
       };
     };
   };

@@ -1,7 +1,7 @@
-import { Cards } from "@/components/cards/ui/Cards";
-import { Tags } from "@/components/videoiframe/ui/Tags";
-import BackgroundVideo from "@/components/videoiframe/ui/VideoIFrame";
+import { Cards } from "@/features/ui/cards/ui/Cards";
+import { BackgroundVideo } from "@/features/ui/videoiframe/ui/VideoIFrame";
 import { Separator } from "@/shared/ui";
+import { Tags } from "lucide-react";
 
 export default function Home() {
   return (

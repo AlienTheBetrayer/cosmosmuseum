@@ -1,4 +1,4 @@
-import { Card } from "@/components/cards/ui/Card";
+import { Card } from "@/features/ui/cards/ui/Card";
 
 export const Cards = () => {
   return (

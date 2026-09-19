@@ -1,4 +1,4 @@
-import { Theme } from "@/components/themes/lib/themes";
+import { Theme } from "@/features/ui/themes/lib/themes";
 import { useTheme } from "next-themes";
 
 export const useThemes = () => {
