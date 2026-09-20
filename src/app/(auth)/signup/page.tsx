@@ -13,12 +13,23 @@ import {
   Separator,
 } from "@/shared/ui";
 import Form from "@/shared/ui/form/form";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
+import { api } from "@/shared/lib/api";
+import { contracts } from "@/backend";
+import axios from "axios";
 
 export default function SignupPage() {
   // form
   const { form } = useAuthForm();
+
+  const signup = useMutation({
+    mutationFn: async (data: contracts.auth.Signup) => {
+      const res = api.post("/api/auth/signup", { ...data, penis: 33 });
+      return (await res).data;
+    },
+  });
 
   // jsx
   return (
@@ -37,7 +48,27 @@ export default function SignupPage() {
         </CardAction>
       </CardHeader>
 
-      <Form form={form} onSubmit={(data) => {}} className="flex flex-col gap-4">
+      <Form
+        form={form}
+        onSubmit={async (data) => {
+          try {
+            const result = (await signup.mutateAsync(
+              data,
+            )) as contracts.auth.SignupResponse;
+
+            console.log(result);
+          } catch (e) {
+            const err = axios.isAxiosError(e) ? e.response : undefined;
+
+            if (err) {
+              console.log(err.data);
+            } else {
+              console.log("undefined error");
+            }
+          }
+        }}
+        className="flex flex-col gap-4"
+      >
         <CardContent className="flex flex-col gap-4">
           <Form.Input
             name="email"

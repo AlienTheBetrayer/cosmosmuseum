@@ -1,0 +1,111 @@
+import { Permission } from "@/backend/controller/types/permissions";
+import { PipelineConfig } from "@/backend/controller/types/pipeline";
+import { NextRequest, NextResponse } from "next/server";
+import z from "zod";
+
+export class Controller<TBody = unknown, TQuery = unknown, TUser = unknown> {
+  /**
+   * config for pipeline chain
+   */
+  private pipeline: PipelineConfig = {
+    auth: null,
+    permission: null,
+    bodySchema: null,
+    querySchema: null,
+  };
+
+  public validateBody<T>(schema: z.ZodType<T>) {
+    this.pipeline.bodySchema = schema;
+    return this as unknown as Controller<T, TQuery, TUser>;
+  }
+
+  public validateQuery<T>(schema: z.ZodType<T>) {
+    this.pipeline.querySchema = schema;
+    return this as unknown as Controller<TBody, T, TUser>;
+  }
+
+  public auth() {
+    this.pipeline.auth = true;
+    return this;
+  }
+
+  public permission(permission: Permission[]) {
+    this.pipeline.permission = permission;
+    return this;
+  }
+
+  public handle<TResponse>(
+    fn: (ctx: {
+      body: TBody;
+      query: TQuery;
+      user: TUser;
+      requestId: string;
+    }) => Promise<TResponse>,
+  ) {
+    return async (request: NextRequest): Promise<NextResponse> => {
+      try {
+        const url = new URL(request.url);
+
+        // body validation
+        let rawBody = {} as TBody;
+        if (request.method !== "GET" && request.method !== "HEAD") {
+          rawBody = await request
+            .clone()
+            .json()
+            .catch(() => ({}));
+        }
+
+        let validatedBody = rawBody;
+        if (this.pipeline.bodySchema) {
+          validatedBody = this.pipeline.bodySchema.parse(rawBody) as TBody;
+        }
+
+        // query validation
+        let validatedQuery = Object.fromEntries(
+          url.searchParams.entries(),
+        ) as TQuery;
+        if (this.pipeline.querySchema) {
+          validatedQuery = this.pipeline.querySchema.parse(
+            validatedQuery,
+          ) as TQuery;
+        }
+
+        // auth validation
+        let validatedUser = {} as TUser;
+        if (this.pipeline.auth) {
+          validatedUser = {} as TUser;
+        }
+
+        // context constructing
+        const context = {
+          body: validatedBody,
+          query: validatedQuery,
+          user: validatedUser,
+          requestId: crypto.randomUUID(),
+        };
+
+        // success
+        const result = await fn(context);
+        return NextResponse.json(
+          { data: result, error: null },
+          { status: 200 },
+        );
+      } catch (error: unknown) {
+        // standard error
+        if (error instanceof z.ZodError) {
+          return NextResponse.json(
+            { data: null, error: z.treeifyError(error) },
+            { status: 400 },
+          );
+        }
+
+        // unknown error
+        const message = error instanceof Error ? error.message : "unknown";
+        return NextResponse.json(
+          { data: null, error: message },
+          { status: 500 },
+        );
+      }
+    };
+  }
+}
