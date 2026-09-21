@@ -1,6 +1,8 @@
 "use client";
 
+import { contracts } from "@/backend";
 import { useAuthForm } from "@/features/auth/hooks/useAuthForm";
+import { api } from "@/shared/lib/api";
 import {
   Button,
   Card,
@@ -13,12 +15,21 @@ import {
   Separator,
 } from "@/shared/ui";
 import Form from "@/shared/ui/form/form";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function LoginPage() {
   // form
   const { form } = useAuthForm();
+
+  const login = useMutation({
+    mutationFn: async (data: contracts.auth.Login) => {
+      const res = api.post("/api/auth/login", data);
+      return (await res).data;
+    },
+  });
 
   // jsx
   return (
@@ -38,7 +49,21 @@ export default function LoginPage() {
         </CardAction>
       </CardHeader>
 
-      <Form form={form} onSubmit={(data) => {}} className="flex flex-col gap-4">
+      <Form
+        form={form}
+        onSubmit={async (data) => {
+          try {
+            const result = (await login.mutateAsync(
+              data,
+            )) as contracts.auth.LoginResponse;
+
+          } catch (e) {
+            const err = axios.isAxiosError(e) ? e.response : undefined;
+
+          }
+        }}
+        className="flex flex-col gap-4"
+      >
         <CardContent className="flex flex-col gap-4">
           <Form.Input
             name="email"

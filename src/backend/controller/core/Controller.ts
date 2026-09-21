@@ -1,9 +1,11 @@
+import { modules } from "@/backend/controller";
 import { Permission } from "@/backend/controller/types/permissions";
 import { PipelineConfig } from "@/backend/controller/types/pipeline";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
+import { Db } from "../../../../prisma/db";
 
-export class Controller<TBody = unknown, TQuery = unknown, TUser = unknown> {
+export class Controller<TBody = unknown, TQuery = unknown> {
   /**
    * config for pipeline chain
    */
@@ -16,12 +18,12 @@ export class Controller<TBody = unknown, TQuery = unknown, TUser = unknown> {
 
   public validateBody<T>(schema: z.ZodType<T>) {
     this.pipeline.bodySchema = schema;
-    return this as unknown as Controller<T, TQuery, TUser>;
+    return this as unknown as Controller<T, TQuery>;
   }
 
   public validateQuery<T>(schema: z.ZodType<T>) {
     this.pipeline.querySchema = schema;
-    return this as unknown as Controller<TBody, T, TUser>;
+    return this as unknown as Controller<TBody, T>;
   }
 
   public auth() {
@@ -38,7 +40,8 @@ export class Controller<TBody = unknown, TQuery = unknown, TUser = unknown> {
     fn: (ctx: {
       body: TBody;
       query: TQuery;
-      user: TUser;
+      user: Db["Users"] | null;
+      session: Db["AuthSessions"] | null;
       requestId: string;
     }) => Promise<TResponse>,
   ) {
@@ -48,6 +51,7 @@ export class Controller<TBody = unknown, TQuery = unknown, TUser = unknown> {
 
         // body validation
         let rawBody = {} as TBody;
+
         if (request.method !== "GET" && request.method !== "HEAD") {
           rawBody = await request
             .clone()
@@ -55,37 +59,41 @@ export class Controller<TBody = unknown, TQuery = unknown, TUser = unknown> {
             .catch(() => ({}));
         }
 
-        let validatedBody = rawBody;
+        let body = rawBody;
+
         if (this.pipeline.bodySchema) {
-          validatedBody = this.pipeline.bodySchema.parse(rawBody) as TBody;
+          body = this.pipeline.bodySchema.parse(rawBody) as TBody;
         }
 
         // query validation
-        let validatedQuery = Object.fromEntries(
-          url.searchParams.entries(),
-        ) as TQuery;
+        let query = Object.fromEntries(url.searchParams.entries()) as TQuery;
+
         if (this.pipeline.querySchema) {
-          validatedQuery = this.pipeline.querySchema.parse(
-            validatedQuery,
-          ) as TQuery;
+          query = this.pipeline.querySchema.parse(query) as TQuery;
         }
 
         // auth validation
-        let validatedUser = {} as TUser;
+        let user = null;
+        let session = null;
+
         if (this.pipeline.auth) {
-          validatedUser = {} as TUser;
+          ({ user, session } = await modules.sessionService.verify({
+            request,
+          }));
         }
 
         // context constructing
         const context = {
-          body: validatedBody,
-          query: validatedQuery,
-          user: validatedUser,
+          body,
+          query,
+          user,
+          session,
           requestId: crypto.randomUUID(),
         };
 
         // success
         const result = await fn(context);
+
         return NextResponse.json(
           { data: result, error: null },
           { status: 200 },
@@ -101,6 +109,7 @@ export class Controller<TBody = unknown, TQuery = unknown, TUser = unknown> {
 
         // unknown error
         const message = error instanceof Error ? error.message : "unknown";
+
         return NextResponse.json(
           { data: null, error: message },
           { status: 500 },

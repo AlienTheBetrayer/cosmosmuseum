@@ -26,7 +26,7 @@ export default function SignupPage() {
 
   const signup = useMutation({
     mutationFn: async (data: contracts.auth.Signup) => {
-      const res = api.post("/api/auth/signup", { ...data, penis: 33 });
+      const res = api.post("/api/auth/signup", data);
       return (await res).data;
     },
   });
@@ -56,15 +56,9 @@ export default function SignupPage() {
               data,
             )) as contracts.auth.SignupResponse;
 
-            console.log(result);
           } catch (e) {
             const err = axios.isAxiosError(e) ? e.response : undefined;
 
-            if (err) {
-              console.log(err.data);
-            } else {
-              console.log("undefined error");
-            }
           }
         }}
         className="flex flex-col gap-4"

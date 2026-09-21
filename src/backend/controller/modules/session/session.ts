@@ -78,16 +78,18 @@ export class sessionService {
       return await fn("refresh");
     }
   }
-  
+
   /**
    * creates an authentication session
    * @param id (optional) id of the session
-   * @param user_id id of the user 
+   * @param user_id id of the user
    * @param refresh_token_hash hash of the refresh token
    * @param expiry_at expiry temporal date
    * @returns created authentication session
    */
-  static async create(body: contracts.session.Create): Promise<contracts.session.CreateResponse> {
+  static async create(
+    body: contracts.session.Create,
+  ): Promise<contracts.session.CreateResponse> {
     const session = await db.AuthSessions.create({
       id: nanoid(),
       userId: body.user_id,

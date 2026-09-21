@@ -6,6 +6,6 @@ export const POST = new Controller()
   .validateBody(contracts.auth.signup)
   .permission(["user:create", "project:manage"])
   .handle(async ({ body, user }) => {
-    const newUser = await modules.authService.signup(body);
+    const newUser = await modules.authService.login(body);
     return { success: true, user: newUser };
   });
