@@ -2,11 +2,11 @@ import { password } from "@/backend/contracts/shared/auth";
 import z from "zod";
 import { Db } from "../../../../prisma/db";
 
-export const signup = z.object({
+export const create = z.object({
   email: z.email(),
   password: password,
 });
 
-export type Signup = z.infer<typeof signup>;
+export type Create = z.infer<typeof create>;
 
-export type SignupResponse = Db["Users"];
+export type CreateResponse = Db["Users"];

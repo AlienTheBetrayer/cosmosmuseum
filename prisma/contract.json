@@ -33,6 +33,13 @@
                   "kind": "scalar"
                 }
               },
+              "expiryAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -48,7 +55,7 @@
                 }
               },
               "userId": {
-                "nullable": true,
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -58,7 +65,7 @@
             "relations": {
               "user": {
                 "cardinality": "N:1",
-                "nullable": true,
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "userId"
@@ -80,6 +87,9 @@
                 },
                 "editedAt": {
                   "column": "edited_at"
+                },
+                "expiryAt": {
+                  "column": "expiry_at"
                 },
                 "id": {
                   "column": "id"
@@ -259,6 +269,11 @@
                   "nativeType": "timestamptz",
                   "nullable": true
                 },
+                "expiry_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
                 "id": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -272,7 +287,7 @@
                 "user_id": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": true
+                  "nullable": false
                 }
               },
               "foreignKeys": [
@@ -390,7 +405,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "d597a4788e63f159afdaedb0ce9962beb66e61e866dfa47f028692ae7169bf17"
+    "storageHash": "24a32c04d60a69f67f848982279d78f2abfa9638d6295f1cb3cdf011f82098d5"
   },
   "capabilities": {
     "postgres": {

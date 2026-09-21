@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'d597a4788e63f159afdaedb0ce9962beb66e61e866dfa47f028692ae7169bf17'>;
+  StorageHashBase<'24a32c04d60a69f67f848982279d78f2abfa9638d6295f1cb3cdf011f82098d5'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -244,9 +244,10 @@ export type FieldOutputTypes = {
     readonly AuthSessions: {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly refreshTokenHash: CodecTypes['pg/text@1']['output'];
-      readonly userId: CodecTypes['pg/text@1']['output'] | null;
+      readonly userId: CodecTypes['pg/text@1']['output'];
       readonly editedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly expiryAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly Users: {
       readonly id: CodecTypes['pg/text@1']['output'];
@@ -267,9 +268,10 @@ export type FieldInputTypes = {
     readonly AuthSessions: {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly refreshTokenHash: CodecTypes['pg/text@1']['input'];
-      readonly userId: CodecTypes['pg/text@1']['input'] | null;
+      readonly userId: CodecTypes['pg/text@1']['input'];
       readonly editedAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly expiryAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly Users: {
       readonly id: CodecTypes['pg/text@1']['input'];
@@ -290,9 +292,10 @@ export type StorageColumnTypes = {
     readonly auth_sessions: {
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly edited_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly expiry_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly refresh_token_hash: CodecTypes['pg/text@1']['output'];
-      readonly user_id: CodecTypes['pg/text@1']['output'] | null;
+      readonly user_id: CodecTypes['pg/text@1']['output'];
     };
     readonly users: {
       readonly avatar_url: CodecTypes['pg/text@1']['output'];
@@ -313,9 +316,10 @@ export type StorageColumnInputTypes = {
     readonly auth_sessions: {
       readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly edited_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly expiry_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly refresh_token_hash: CodecTypes['pg/text@1']['input'];
-      readonly user_id: CodecTypes['pg/text@1']['input'] | null;
+      readonly user_id: CodecTypes['pg/text@1']['input'];
     };
     readonly users: {
       readonly avatar_url: CodecTypes['pg/text@1']['input'];
@@ -350,10 +354,11 @@ export namespace Models {
   export type public_AuthSessions = {
     id: CodecTypes['pg/text@1']['output'];
     refreshTokenHash: CodecTypes['pg/text@1']['output'];
-    userId: CodecTypes['pg/text@1']['output'] | null;
+    userId: CodecTypes['pg/text@1']['output'];
     editedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
     createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
-    user: public_Users | null;
+    expiryAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    user: public_Users;
     readonly [RelationKeys]?: 'user';
   };
 }
@@ -398,7 +403,7 @@ type ContractBase = Omit<
                 readonly user_id: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
+                  readonly nullable: false;
                 };
                 readonly edited_at: {
                   readonly nativeType: 'timestamptz';
@@ -410,6 +415,11 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+                readonly expiry_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
                 };
               };
               primaryKey: {
@@ -528,7 +538,7 @@ type ContractBase = Omit<
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly userId: {
-                readonly nullable: true;
+                readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly editedAt: {
@@ -545,6 +555,13 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-temporal@1';
                 };
               };
+              readonly expiryAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
             };
             readonly relations: {
               readonly user: {
@@ -553,7 +570,7 @@ type ContractBase = Omit<
                   readonly model: 'Users';
                 };
                 readonly cardinality: 'N:1';
-                readonly nullable: true;
+                readonly nullable: false;
                 readonly on: {
                   readonly localFields: readonly ['userId'];
                   readonly targetFields: readonly ['id'];
@@ -569,6 +586,7 @@ type ContractBase = Omit<
                 readonly userId: { readonly column: 'user_id' };
                 readonly editedAt: { readonly column: 'edited_at' };
                 readonly createdAt: { readonly column: 'created_at' };
+                readonly expiryAt: { readonly column: 'expiry_at' };
               };
             };
           };

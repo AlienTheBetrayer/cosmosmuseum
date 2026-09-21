@@ -1,75 +1,52 @@
-import { jwtService } from "@/backend/controller/modules/jwt/jwt";
+import { contracts } from "@/backend";
+import { modules } from "@/backend/controller";
 import bcrypt from "bcryptjs";
-import { NextRequest } from "next/server";
-import { db } from "../../../../../prisma/db";
 
 export class authService {
   /**
-   * verifies the authentication session from the request.
-   * allows if access is valid or access is invalid but refresh is valid
-   * @param request next request object
-   * @returns true if verified, otherwise throws.
+   * signs the user up, creates the user, generates their cosmetics, hashed password, etc
+   * @param email email of the user
+   * @param password password (not hashed)
+   * @returns generated user if everything's right. throws if user already exists
    */
-  static verify = async (request: NextRequest) => {
-    // no token found whatsoever
-    if (
-      !request.cookies.has("refreshToken") &&
-      !request.cookies.has("accessToken")
-    ) {
-      throw new Error("no token found.");
+  static async signup(
+    body: contracts.auth.Signup,
+  ): Promise<contracts.auth.SignupResponse> {
+    const user = await modules.userService.create(body);
+    return user;
+  }
+
+  /**
+   * verifies the login session 
+   * @param email email
+   * @param password password 
+   * @returns 
+   */
+  static async verify(
+    body: contracts.auth.Login,
+  ): Promise<contracts.auth.LoginResponse> {
+    // validating the user
+    const user = await modules.userService.find(body);
+
+    if (!user?.passwordHash) {
+      throw new Error("user does not exist.");
     }
 
-    const fn = async (type: "access" | "refresh") => {
-      try {
-        const token = (
-          type === "access"
-            ? request.cookies.get("accessToken")
-            : request.cookies.get("refreshToken")
-        )?.value;
+    // password comparison
+    const isCorrect = await bcrypt.compare(body.password, user.passwordHash);
 
-        if (!token) {
-          throw new Error("token is not found at all.");
-        }
-
-        // verifying the refresh token
-        const verified = jwtService.verify(
-          token,
-          type === "access" ? "ACCESS_TOKEN_SECRET" : "REFRESH_TOKEN_SECRET",
-        );
-
-        const found = await db.AuthSessions.include("user").first({
-          id: verified.sessionId,
-          userId: verified.userId,
-        });
-
-        if (!found) {
-          throw new Error("session not found in the database.");
-        }
-
-        if (!found.user) {
-          throw new Error("user is not found in the relation.");
-        }
-
-        // verifying the hash
-        if (
-          type === "refresh" &&
-          !(await bcrypt.compare(token, found.refreshTokenHash))
-        ) {
-          throw new Error("jwt hash is not verified.");
-        }
-
-        const { user, ...session } = found;
-        return { user, session };
-      } catch (e) {
-        const message = e instanceof Error ? e.message : null;
-        throw new Error(message || "jwt token is not verified.");
-      }
-    };
-
-    try {
-      return await fn("access");
-    } catch {
-      return await fn("refresh");
+    if (!isCorrect) {
+      throw new Error("credentials are not valid.");
     }
-  };
+
+    return user;
+  }
+
+  static async login(body: contracts.auth.Login): Promise<contracts.auth.LoginResponse> {
+    // user verification
+    const user = await this.verify(body);
+
+    // issuing data
+    return user;
+  }
 }

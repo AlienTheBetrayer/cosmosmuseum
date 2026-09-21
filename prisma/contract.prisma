@@ -21,10 +21,11 @@ model Users {
 model AuthSessions {
   id               String       @id(map: "auth_sessions_pkey")
   refreshTokenHash String       @map("refresh_token_hash")
-  userId           String?      @map("user_id")
+  userId           String       @map("user_id")
   editedAt         Timestamptz? @map("edited_at")
   createdAt        Timestamptz  @default(now()) @map("created_at")
-  user             Users?       @relation(fields: [userId], references: [id], onDelete: Cascade, map: "auth_sessions_user_id_fkey", index: false)
+  expiryAt         Timestamptz  @map("expiry_at")
+  user             Users        @relation(fields: [userId], references: [id], onDelete: Cascade, map: "auth_sessions_user_id_fkey", index: false)
 
   @@rls
   @@map("auth_sessions")
