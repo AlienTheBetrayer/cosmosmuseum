@@ -1,4 +1,4 @@
-import { Models } from "../../../../prisma/contract";
+import { Models } from "../../../prisma/contract";
 
 export type RequestContext<TBody, TQuery> = {
   body: TBody;

@@ -62,6 +62,18 @@ export class authService {
       userId: user.id,
     });
 
+    // setting
+    await modules.jwtService.setHttpCookie({
+      name: "accessToken",
+      token: accessToken,
+      expiryMs: 15 * 60 * 1000,
+    });
+    await modules.jwtService.setHttpCookie({
+      name: "refreshToken",
+      token: refreshToken,
+      expiryMs: 30 * 24 * 60 * 60 * 1000,
+    });
+
     return { accessToken, refreshToken, user, session };
   }
 }

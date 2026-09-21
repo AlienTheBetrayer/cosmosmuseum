@@ -1,4 +1,4 @@
-import { Permission } from "@/backend/controller/types/permissions";
+import { Permission } from "@/backend/types/permissions";
 import z from "zod";
 
 /**

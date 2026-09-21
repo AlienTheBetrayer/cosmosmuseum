@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
 import z from "zod";
 import { db } from "../../../../../prisma/db";
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export class jwtService {
   /**
@@ -67,11 +69,11 @@ export class jwtService {
    * @param userId id of the user
    * @returns access token, refresh token and session
    */
-  static async issueAuthData(params: { userId: string }) {
+  static async issueAuthData(body: { userId: string }) {
     // session
     const session = await modules.sessionService.create({
       id: nanoid(),
-      user_id: params.userId,
+      user_id: body.userId,
       refresh_token_hash: "",
       expiry_at: Temporal.Instant.fromEpochMilliseconds(
         Date.now() + 30 * 24 * 60 * 60 * 1000,
@@ -81,7 +83,7 @@ export class jwtService {
     // signing tokens
     const payload: z.infer<typeof this.defaultSchema> = {
       sessionId: session.id,
-      userId: params.userId,
+      userId: body.userId,
     };
 
     const tokens = {
@@ -103,5 +105,26 @@ export class jwtService {
     }).update({ refreshTokenHash });
 
     return { tokens, session: updatedSession! };
+  }
+
+  /**
+   * securely sets the jwt token at the http-only cookies
+   * @param name name of the token
+   * @param token jwt token
+   * @param expiryMs expiry in milliseconds
+   */
+  static async setHttpCookie(body: {
+    name: string;
+    token: string;
+    expiryMs: number;
+  }) {
+    const cookie = await cookies();
+
+    cookie.set(body.name, body.token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: body.expiryMs,
+    });
   }
 }

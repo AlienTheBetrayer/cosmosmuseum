@@ -1,6 +1,6 @@
 import { modules } from "@/backend/controller";
-import { Permission } from "@/backend/controller/types/permissions";
-import { PipelineConfig } from "@/backend/controller/types/pipeline";
+import { Permission } from "@/backend/types/permissions";
+import { PipelineConfig } from "@/backend/types/pipeline";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 import { Db } from "../../../../prisma/db";
@@ -42,6 +42,7 @@ export class Controller<TBody = unknown, TQuery = unknown> {
       query: TQuery;
       user: Db["Users"] | null;
       session: Db["AuthSessions"] | null;
+      request: NextRequest;
       requestId: string;
     }) => Promise<TResponse>,
   ) {
@@ -88,6 +89,7 @@ export class Controller<TBody = unknown, TQuery = unknown> {
           query,
           user,
           session,
+          request,
           requestId: crypto.randomUUID(),
         };
 
