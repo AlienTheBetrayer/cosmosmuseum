@@ -9,4 +9,9 @@ export const login = z.object({
 
 export type Login = z.infer<typeof login>;
 
-export type LoginResponse = Db["Users"];
+export type LoginResponse = {
+  user: Db["Users"];
+  session: Db["AuthSessions"];
+  accessToken: string;
+  refreshToken: string;
+};

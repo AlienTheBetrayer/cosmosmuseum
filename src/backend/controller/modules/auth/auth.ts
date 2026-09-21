@@ -17,14 +17,14 @@ export class authService {
   }
 
   /**
-   * verifies the login session 
+   * verifies the login session
    * @param email email
-   * @param password password 
-   * @returns 
+   * @param password password
+   * @returns
    */
   static async verify(
-    body: contracts.auth.Login,
-  ): Promise<contracts.auth.LoginResponse> {
+    body: contracts.auth.Verify,
+  ): Promise<contracts.auth.VerifyResponse> {
     // validating the user
     const user = await modules.userService.find(body);
 
@@ -42,11 +42,26 @@ export class authService {
     return user;
   }
 
-  static async login(body: contracts.auth.Login): Promise<contracts.auth.LoginResponse> {
+  /**
+   * logins the user
+   * @param email email of the user
+   * @param password not hashed password
+   * @returns
+   */
+  static async login(
+    body: contracts.auth.Login,
+  ): Promise<contracts.auth.LoginResponse> {
     // user verification
     const user = await this.verify(body);
 
-    // issuing data
-    return user;
+    // issuing
+    const {
+      tokens: { access: accessToken, refresh: refreshToken },
+      session,
+    } = await modules.jwtService.issueAuthData({
+      userId: user.id,
+    });
+
+    return { accessToken, refreshToken, user, session };
   }
 }

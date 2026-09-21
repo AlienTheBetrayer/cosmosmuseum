@@ -102,6 +102,6 @@ export class jwtService {
       id: session.id,
     }).update({ refreshTokenHash });
 
-    return { tokens, session: updatedSession };
+    return { tokens, session: updatedSession! };
   }
 }
