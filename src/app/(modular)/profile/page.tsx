@@ -10,6 +10,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  Spinner,
 } from "@/shared/ui";
 import Link from "next/link";
 
@@ -42,7 +43,8 @@ export default function ProfilePage() {
             logout.mutate({});
           }}
         >
-          Log out
+          {logout.isPending && <Spinner />}
+          <span>Вийти</span>
         </Button>
       </CardContent>
 

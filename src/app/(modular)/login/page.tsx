@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
   Separator,
+  Spinner,
 } from "@/shared/ui";
 import Form, { useZodForm } from "@/shared/ui/form/form";
 import Image from "next/image";
@@ -84,7 +85,10 @@ export default function LoginPage() {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2">
-          <Form.Submit variant="outline">Логін</Form.Submit>
+          <Form.Submit variant="outline">
+            {login.isPending && <Spinner />}
+            <span>Логін</span>
+          </Form.Submit>
 
           <Separator />
 

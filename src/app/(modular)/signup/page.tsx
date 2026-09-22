@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
   Separator,
+  Spinner,
 } from "@/shared/ui";
 import Form, { useZodForm } from "@/shared/ui/form/form";
 import Image from "next/image";
@@ -81,7 +82,10 @@ export default function SignupPage() {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2">
-          <Form.Submit variant="outline">Реєстрація</Form.Submit>
+          <Form.Submit variant="outline">
+            {signup.isPending && <Spinner />}
+            <span>Реєстрація</span>
+          </Form.Submit>
 
           <Separator />
 
