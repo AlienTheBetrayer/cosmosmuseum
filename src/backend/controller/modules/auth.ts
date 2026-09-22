@@ -1,8 +1,8 @@
 import { contracts } from "@/backend";
 import { modules } from "@/backend/controller";
-import { AppError } from "@/backend/error/error";
+import { AppError } from "@/backend/lib/error";
 import bcrypt from "bcryptjs";
-import { db } from "../../../../../prisma/db";
+import { db } from "../../../../prisma/db";
 
 export class authService {
   /**
@@ -68,6 +68,10 @@ export class authService {
     return { accessToken, refreshToken, user, session };
   }
 
+  /**
+   * logs the user out
+   * @returns true if succeded
+   */
   static async logout(
     body: contracts.auth.Logout,
   ): Promise<contracts.auth.LogoutResponse> {
@@ -98,5 +102,21 @@ export class authService {
 
     // not authenticated
     return false;
+  }
+
+  /**
+   * creates the code for password recovery
+   * @param email email of the user to send the code to
+   * @param expiryMs expiry of the code in milliseconds
+   * @returns
+   */
+  static async code(
+    body: contracts.auth.Code,
+  ): Promise<contracts.auth.CodeResponse> {
+    await modules.verifyService.issueCode({
+      email: body.email,
+      expiryMs: 15 * 60 * 1000,
+    });
+    return true;
   }
 }

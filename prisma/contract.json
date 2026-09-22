@@ -8,6 +8,10 @@
       "model": "AuthSessions",
       "namespace": "public"
     },
+    "codes": {
+      "model": "Codes",
+      "namespace": "public"
+    },
     "users": {
       "model": "Users",
       "namespace": "public"
@@ -105,6 +109,84 @@
               "table": "auth_sessions"
             }
           },
+          "Codes": {
+            "fields": {
+              "code": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "createdAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "expiryAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "user": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Users",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "code": {
+                  "column": "code"
+                },
+                "createdAt": {
+                  "column": "created_at"
+                },
+                "expiryAt": {
+                  "column": "expiry_at"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "userId": {
+                  "column": "user_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "codes"
+            }
+          },
           "Users": {
             "fields": {
               "avatarUrl": {
@@ -171,7 +253,7 @@
                 }
               },
               "username": {
-                "nullable": true,
+                "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -191,6 +273,21 @@
                 },
                 "to": {
                   "model": "AuthSessions",
+                  "namespace": "public"
+                }
+              },
+              "codes": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "Codes",
                   "namespace": "public"
                 }
               }
@@ -245,6 +342,11 @@
               "kind": "rls",
               "namespaceId": "public",
               "tableName": "auth_sessions"
+            },
+            "codes": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "codes"
             },
             "users": {
               "kind": "rls",
@@ -319,6 +421,67 @@
               },
               "uniques": []
             },
+            "codes": {
+              "columns": {
+                "code": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "expiry_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "user_id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "name": "codes_user_id_fkey",
+                  "onDelete": "cascade",
+                  "source": {
+                    "columns": [
+                      "user_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "codes"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ],
+                "name": "codes_pkey"
+              },
+              "uniques": []
+            },
             "users": {
               "columns": {
                 "avatar_url": {
@@ -373,7 +536,7 @@
                 "username": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": true
+                  "nullable": false
                 }
               },
               "foreignKeys": [],
@@ -405,7 +568,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "24a32c04d60a69f67f848982279d78f2abfa9638d6295f1cb3cdf011f82098d5"
+    "storageHash": "10f73c6e4f9d76c1b0e3eb52a152d983a7f02f59e496ab409fc7386408e38531"
   },
   "capabilities": {
     "postgres": {

@@ -4,7 +4,7 @@ import { PipelineConfig } from "@/backend/types/pipeline";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 import { Db } from "../../../../prisma/db";
-import { AppError } from "@/backend/error/error";
+import { AppError } from "@/backend/lib/error";
 
 export class Controller<TBody = unknown, TQuery = unknown> {
   /**
@@ -109,6 +109,8 @@ export class Controller<TBody = unknown, TQuery = unknown> {
             { status: 400 },
           );
         }
+
+        console.error(`ERROR!!`, error);
 
         // unknown error
         const appError = error instanceof AppError ? error : null;

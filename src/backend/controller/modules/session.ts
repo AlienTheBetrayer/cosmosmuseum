@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { db } from "../../../../../prisma/db";
+import { db } from "../../../../prisma/db";
 import { contracts } from "@/backend";
 import { nanoid } from "nanoid";
 import { modules } from "@/backend/controller";

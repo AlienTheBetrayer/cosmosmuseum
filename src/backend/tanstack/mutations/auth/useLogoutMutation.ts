@@ -7,8 +7,10 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
 export const useLogoutMutation = () => {
+  // router
   const router = useRouter();
 
+  // mutation
   const logout = useMutation({
     mutationFn: async (data: contracts.auth.Logout) => {
       const res = api.post("/api/auth/logout");

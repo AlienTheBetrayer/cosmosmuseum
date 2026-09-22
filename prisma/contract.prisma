@@ -4,7 +4,7 @@
 model Users {
   id           String         @id(map: "users_pkey")
   email        String         @unique(map: "users_email_key")
-  username     String?        @unique(map: "users_username_key")
+  username     String         @unique(map: "users_username_key")
   passwordHash String?        @map("password_hash")
   color        String
   avatarUrl    String         @map("avatar_url")
@@ -13,6 +13,7 @@ model Users {
   editedAt     Timestamptz?   @map("edited_at")
   createdAt    Timestamptz    @default(now()) @map("created_at")
   authSessions AuthSessions[]
+  codes        Codes[]
 
   @@rls
   @@map("users")
@@ -29,4 +30,16 @@ model AuthSessions {
 
   @@rls
   @@map("auth_sessions")
+}
+
+model Codes {
+  id        String       @id(map: "codes_pkey")
+  userId    String       @map("user_id")
+  code      String?
+  expiryAt  Timestamptz  @map("expiry_at")
+  createdAt Timestamptz? @default(now()) @map("created_at")
+  user      Users        @relation(fields: [userId], references: [id], onDelete: Cascade, map: "codes_user_id_fkey", index: false)
+
+  @@rls
+  @@map("codes")
 }

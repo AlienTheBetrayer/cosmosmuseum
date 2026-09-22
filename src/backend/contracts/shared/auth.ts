@@ -12,6 +12,10 @@ export const username = z
 
 export const email = z.email("Не валідна електронна адреса");
 
+export const code = z
+  .string("Не валідний код")
+  .length(6, "Код повинен містити 6 символів");
+
 export const identifier = z
   .string("Ідентифікатор не валiдний")
   .min(1, "Ідентифікатор користувача повинен містити щонайменше 1 символ")

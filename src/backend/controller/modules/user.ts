@@ -1,11 +1,11 @@
 import { random } from "@/backend/lib/random";
 import { Avatar, Style } from "@dicebear/core";
 import definition from "@dicebear/styles/identicon.json";
-import { db } from "../../../../../prisma/db";
+import { db } from "../../../../prisma/db";
 import { nanoid } from "nanoid";
 import bcrypt from "bcryptjs";
 import { contracts } from "@/backend";
-import { AppError } from "@/backend/error/error";
+import { AppError } from "@/backend/lib/error";
 import { or } from "@prisma/orm-postgres/orm-client";
 
 export class userService {

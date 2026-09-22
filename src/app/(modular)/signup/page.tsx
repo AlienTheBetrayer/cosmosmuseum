@@ -16,7 +16,7 @@ import Form, { useZodForm } from "@/shared/ui/form/form";
 import Image from "next/image";
 import Link from "next/link";
 import { contracts } from "@/backend";
-import { useSignupMutation } from "@/backend/tanstack/mutations/useSignupMutation";
+import { useSignupMutation } from "@/backend/tanstack/mutations/auth/useSignupMutation";
 
 export default function SignupPage() {
   // form

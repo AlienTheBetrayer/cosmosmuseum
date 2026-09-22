@@ -1,6 +1,6 @@
 "use client";
 
-import { useLogoutMutation } from "@/backend/tanstack/mutations/useLogoutMutation";
+import { useLogoutMutation } from "@/backend/tanstack/mutations/auth/useLogoutMutation";
 import {
   Button,
   Card,
