@@ -1,7 +1,6 @@
 "use client";
 
-import { contracts } from "@/backend";
-import { api } from "@/shared/lib/api";
+import { useLogoutMutation } from "@/backend/tanstack/mutations/useLogoutMutation";
 import {
   Button,
   Card,
@@ -12,16 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/ui";
-import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 
 export default function ProfilePage() {
-  const logout = useMutation({
-    mutationFn: async (data: contracts.auth.Logout) => {
-      const res = api.post("/api/auth/logout");
-      return (await res).data;
-    },
-  });
+  // mutation
+  const { logout } = useLogoutMutation();
 
   // jsx
   return (

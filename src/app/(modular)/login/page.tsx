@@ -1,7 +1,7 @@
 "use client";
 
 import { contracts } from "@/backend";
-import { api } from "@/shared/lib/api";
+import { useLoginMutation } from "@/backend/tanstack/mutations/useLoginMutation";
 import {
   Button,
   Card,
@@ -14,8 +14,6 @@ import {
   Separator,
 } from "@/shared/ui";
 import Form, { useZodForm } from "@/shared/ui/form/form";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -28,18 +26,8 @@ export default function LoginPage() {
     },
   });
 
-  const login = useMutation({
-    mutationFn: async (data: contracts.auth.Login) => {
-      const res = api.post("/api/auth/login", data);
-      return (await res).data;
-    },
-    onError: (e) => {
-      const err = axios.isAxiosError(e) ? e.response : undefined;
-      const field = err?.data?.errorData?.field;
-
-      form.setError(field, { message: err?.data.error });
-    },
-  });
+  // mutation
+  const { login } = useLoginMutation(form);
 
   // jsx
   return (
@@ -61,8 +49,8 @@ export default function LoginPage() {
 
       <Form
         form={form}
-        onSubmit={async (data) => {
-          (await login.mutateAsync(data)) as contracts.auth.LoginResponse;
+        onSubmit={(data) => {
+          login.mutate(data);
         }}
         className="flex flex-col gap-4"
       >

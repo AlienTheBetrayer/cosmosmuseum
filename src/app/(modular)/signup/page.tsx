@@ -12,12 +12,10 @@ import {
   Separator,
 } from "@/shared/ui";
 import Form, { useZodForm } from "@/shared/ui/form/form";
-import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { api } from "@/shared/lib/api";
 import { contracts } from "@/backend";
-import axios from "axios";
+import { useSignupMutation } from "@/backend/tanstack/mutations/useSignupMutation";
 
 export default function SignupPage() {
   // form
@@ -29,18 +27,8 @@ export default function SignupPage() {
     },
   });
 
-  const signup = useMutation({
-    mutationFn: async (data: contracts.auth.Signup) => {
-      const res = api.post("/api/auth/signup", data);
-      return (await res).data;
-    },
-    onError: (e) => {
-      const err = axios.isAxiosError(e) ? e.response : undefined;
-      const field = err?.data?.errorData?.field;
-
-      form.setError(field, { message: err?.data.error });
-    },
-  });
+  // mutation
+  const { signup } = useSignupMutation(form);
 
   // jsx
   return (
@@ -61,8 +49,8 @@ export default function SignupPage() {
 
       <Form
         form={form}
-        onSubmit={async (data) => {
-          (await signup.mutateAsync(data)) as contracts.auth.SignupResponse;
+        onSubmit={(data) => {
+          signup.mutate(data);
         }}
         className="flex flex-col gap-4"
       >

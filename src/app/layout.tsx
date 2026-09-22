@@ -19,7 +19,9 @@ export default async function RootLayout({
   let auth: contracts.auth.GetResponse | null = null;
 
   try {
-    auth = (await (await sfetch("/api/auth")).json()).data;
+    auth = (
+      await (await sfetch("/api/auth", { next: { tags: ["me"] } })).json()
+    ).data;
   } catch {
     /** */
   }
