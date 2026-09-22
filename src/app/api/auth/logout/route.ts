@@ -3,9 +3,9 @@ import { modules } from "@/backend/controller";
 import { Controller } from "@/backend/controller/core/Controller";
 
 export const POST = new Controller()
-  .validateBody(contracts.auth.login)
+  .validateBody(contracts.auth.logout)
   .permission(["user:create", "project:manage"])
   .handle(async ({ body, user }) => {
-    const newUser = await modules.authService.login(body);
-    return { success: true, user: newUser };
+    const success = await modules.authService.logout(body);
+    return { success };
   });

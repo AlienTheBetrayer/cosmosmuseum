@@ -2,6 +2,7 @@ import { contracts } from "@/backend";
 import { modules } from "@/backend/controller";
 import { AppError } from "@/backend/error/error";
 import bcrypt from "bcryptjs";
+import { db } from "../../../../../prisma/db";
 
 export class authService {
   /**
@@ -65,5 +66,37 @@ export class authService {
     await modules.jwtService.setHttpAuthTokens({ accessToken, refreshToken });
 
     return { accessToken, refreshToken, user, session };
+  }
+
+  static async logout(
+    body: contracts.auth.Logout,
+  ): Promise<contracts.auth.LogoutResponse> {
+    const tokens = await modules.jwtService.getAuthTokens();
+
+    // tokens found
+    if (tokens.refreshToken) {
+      try {
+        const payload = modules.jwtService.verify({
+          token: tokens.refreshToken,
+          key: "REFRESH_TOKEN_SECRET",
+        });
+
+        // session + cookie clearing
+        await Promise.all([
+          db.AuthSessions.where({
+            id: payload.sessionId,
+          }).delete(),
+          modules.jwtService.deleteCookie("accessToken"),
+          modules.jwtService.deleteCookie("refreshToken"),
+        ]);
+
+        return true;
+      } catch {
+        throw new Error("Токен не валідний.");
+      }
+    }
+
+    // not authenticated
+    return false;
   }
 }

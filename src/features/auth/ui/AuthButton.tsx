@@ -11,7 +11,6 @@ export const AuthButton = ({
 }: {
   auth: contracts.auth.GetResponse | null;
 }) => {
-  console.log(auth);
   if (!auth?.user) {
     // not authenticated
     return (
@@ -29,9 +28,20 @@ export const AuthButton = ({
 
   // main jsx
   return (
-    <Button variant="ghost">
-      <Image alt="avatar" src={auth.user.avatarUrl} width={16} height={16} />
-      <span className="truncate max-w-12">{auth.user.username}</span>
-    </Button>
+    <Button
+      variant="ghost"
+      render={
+        <Link href="/profile">
+          <Image
+            alt="avatar"
+            src={auth.user.avatarUrl}
+            width={16}
+            height={16}
+          />
+          <span className="truncate max-w-12">{auth.user.username}</span>
+        </Link>
+      }
+      nativeButton={false}
+    />
   );
 };

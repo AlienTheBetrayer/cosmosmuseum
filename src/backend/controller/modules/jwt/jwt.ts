@@ -151,6 +151,15 @@ export class jwtService {
   }
 
   /**
+   * deletes a cookie from the store.
+   * @param name name of the cookie
+   */
+  static async deleteCookie(name: string) {
+    const cookieStore = await cookies();
+    cookieStore.delete(name);
+  }
+
+  /**
    * sets both auth tokens as a http-only cookie
    * @param accessToken access token string
    * @param refreshToken refresh token string
