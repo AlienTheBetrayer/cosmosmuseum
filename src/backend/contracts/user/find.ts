@@ -1,16 +1,8 @@
 import z from "zod";
 import { Db } from "../../../../prisma/db";
+import { identifier } from "@/backend/contracts/shared/auth";
 
-export const find = z.union([
-  z.object({
-    email: z.email(),
-    username: z.never().optional(),
-  }),
-  z.object({
-    username: z.string().min(1),
-    email: z.never().optional(),
-  }),
-]);
+export const find = identifier;
 
 export type Find = z.infer<typeof find>;
 

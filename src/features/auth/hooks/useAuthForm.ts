@@ -6,6 +6,7 @@ export const useAuthForm = () => {
   const { form } = useZodForm(contracts.auth.signup, {
     defaultValues: {
       email: "",
+      username: "",
       password: "",
     },
   });

@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
 import z from "zod";
 import { db } from "../../../../../prisma/db";
-import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 
 export class jwtService {
@@ -32,7 +31,7 @@ export class jwtService {
     const processKey = process.env[body.key];
 
     if (!processKey) {
-      throw new Error("process key is not found.");
+      throw new Error("Ключ процесу не знайдено.");
     }
 
     // verifying
@@ -41,7 +40,7 @@ export class jwtService {
     const verified = (body.schema ?? this.defaultSchema).safeParse(payload);
     if (!verified.success) {
       throw new Error(
-        `failed validating token with a given schema. reason: ${verified.error.message}`,
+        `Не вдалося перевірити токен за заданою схемою. Причина: ${verified.error.message}`,
       );
     }
 
@@ -88,11 +87,12 @@ export class jwtService {
       userId: body.userId,
     };
 
-    const accessToken = jwt.sign(payload, "ACCESS_TOKEN_SECRET");
-    const refreshToken = jwt.sign(payload, "REFRESH_TOKEN_SECRET");
+    const { accessToken, refreshToken } = await this.signAuthTokens({
+      payload,
+    });
 
     if (!accessToken || !refreshToken) {
-      throw new Error("failed signing tokens.");
+      throw new Error("Не вдалося підписати токени.");
     }
 
     // hashing the refresh token
@@ -133,7 +133,7 @@ export class jwtService {
    * @param name name of the cookie
    * @returns cookie value or undefined if not found
    */
-  static async getCookie(name: string ) {
+  static async getCookie(name: string) {
     const cookieStore = await cookies();
     return cookieStore.get(name)?.value;
   }
@@ -173,12 +173,11 @@ export class jwtService {
   }
 
   /**
-   * sets both tokens given a payload
+   * signs both tokens given a payload
    * @param payload token payload
-   * @param request request object
-   * @param response response object
+   * @returns access and refresh tokens
    */
-  static async issueAuthTokens(body: { payload: object }) {
+  static async signAuthTokens(body: { payload: object }) {
     // signing tokens
     const accessToken = this.sign({
       payload: body.payload,
@@ -192,9 +191,24 @@ export class jwtService {
       key: "REFRESH_TOKEN_SECRET",
     });
 
+    return { accessToken, refreshToken };
+  }
+
+  /**
+   * sets both tokens given a payload
+   * @param payload token payload
+   * @param request request object
+   * @param response response object
+   * @returns access and refresh tokens
+   */
+  static async issueAuthTokens(body: { payload: object }) {
+    const { accessToken, refreshToken } = await this.signAuthTokens({
+      payload: body.payload,
+    });
+
     // validating
     if (!accessToken || !refreshToken) {
-      throw new Error("failed signing tokens.");
+      throw new Error("Не вдалося підписати токени.");
     }
 
     // setting cookies

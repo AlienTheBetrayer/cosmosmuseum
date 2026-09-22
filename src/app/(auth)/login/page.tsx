@@ -1,7 +1,6 @@
 "use client";
 
 import { contracts } from "@/backend";
-import { useAuthForm } from "@/features/auth/hooks/useAuthForm";
 import { api } from "@/shared/lib/api";
 import {
   Button,
@@ -14,7 +13,7 @@ import {
   CardTitle,
   Separator,
 } from "@/shared/ui";
-import Form from "@/shared/ui/form/form";
+import Form, { useZodForm } from "@/shared/ui/form/form";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import Image from "next/image";
@@ -22,12 +21,23 @@ import Link from "next/link";
 
 export default function LoginPage() {
   // form
-  const { form } = useAuthForm();
+  const { form } = useZodForm(contracts.auth.login, {
+    defaultValues: {
+      identifier: "",
+      password: "",
+    },
+  });
 
   const login = useMutation({
     mutationFn: async (data: contracts.auth.Login) => {
       const res = api.post("/api/auth/login", data);
       return (await res).data;
+    },
+    onError: (e) => {
+      const err = axios.isAxiosError(e) ? e.response : undefined;
+      const field = err?.data?.errorData?.field;
+
+      form.setError(field, { message: err?.data.error });
     },
   });
 
@@ -52,25 +62,17 @@ export default function LoginPage() {
       <Form
         form={form}
         onSubmit={async (data) => {
-          try {
-            const result = (await login.mutateAsync(
-              data,
-            )) as contracts.auth.LoginResponse;
-
-          } catch (e) {
-            const err = axios.isAxiosError(e) ? e.response : undefined;
-
-          }
+          (await login.mutateAsync(data)) as contracts.auth.LoginResponse;
         }}
         className="flex flex-col gap-4"
       >
         <CardContent className="flex flex-col gap-4">
           <Form.Input
-            name="email"
-            label="Пошта"
-            id="email"
-            description="Ваша електронна пошта"
-            placeholder="m@email.com"
+            name="identifier"
+            label="Iдентифікатор"
+            id="identifier"
+            description="Ваша електронна пошта або псевдонiм"
+            placeholder="m@email.com / Джон Доу"
           />
 
           <Form.Input

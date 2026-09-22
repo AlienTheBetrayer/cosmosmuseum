@@ -4,6 +4,7 @@ import { PipelineConfig } from "@/backend/types/pipeline";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 import { Db } from "../../../../prisma/db";
+import { AppError } from "@/backend/error/error";
 
 export class Controller<TBody = unknown, TQuery = unknown> {
   /**
@@ -110,10 +111,22 @@ export class Controller<TBody = unknown, TQuery = unknown> {
         }
 
         // unknown error
-        const message = error instanceof Error ? error.message : "unknown";
+        const appError = error instanceof AppError ? error : null;
 
+        if (!appError) {
+          return NextResponse.json(
+            { data: null, error: "Невідома помилка." },
+            { status: 500 },
+          );
+        }
+
+        // app error
         return NextResponse.json(
-          { data: null, error: message },
+          {
+            data: null,
+            error: appError.message,
+            errorData: appError.data,
+          },
           { status: 500 },
         );
       }

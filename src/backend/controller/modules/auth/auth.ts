@@ -1,5 +1,6 @@
 import { contracts } from "@/backend";
 import { modules } from "@/backend/controller";
+import { AppError } from "@/backend/error/error";
 import bcrypt from "bcryptjs";
 
 export class authService {
@@ -26,17 +27,17 @@ export class authService {
     body: contracts.auth.Verify,
   ): Promise<contracts.auth.VerifyResponse> {
     // validating the user
-    const user = await modules.userService.find(body);
+    const user = await modules.userService.find(body.identifier);
 
     if (!user?.passwordHash) {
-      throw new Error("user does not exist.");
+      throw new AppError("Користувач не існує.", { field: "password" });
     }
 
     // password comparison
     const isCorrect = await bcrypt.compare(body.password, user.passwordHash);
 
     if (!isCorrect) {
-      throw new Error("credentials are not valid.");
+      throw new AppError("Облікові дані недійсні.", { field: "password" });
     }
 
     return user;
@@ -61,7 +62,7 @@ export class authService {
       });
 
     // setting
-    await modules.jwtService.setHttpAuthTokens({ accessToken, refreshToken })
+    await modules.jwtService.setHttpAuthTokens({ accessToken, refreshToken });
 
     return { accessToken, refreshToken, user, session };
   }

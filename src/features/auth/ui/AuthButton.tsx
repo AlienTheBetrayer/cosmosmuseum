@@ -1,17 +1,37 @@
+"use client";
+
+import { contracts } from "@/backend";
 import { Button } from "@/shared/ui";
 import { LogIn } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
-export const AuthButton = () => {
+export const AuthButton = ({
+  auth,
+}: {
+  auth: contracts.auth.GetResponse | null;
+}) => {
+  console.log(auth);
+  if (!auth?.user) {
+    // not authenticated
+    return (
+      <Button
+        render={
+          <Link href="/login">
+            <span>Логін</span>
+            <LogIn />
+          </Link>
+        }
+        nativeButton={false}
+      />
+    );
+  }
+
+  // main jsx
   return (
-    <Button
-      render={
-        <Link href="/login">
-          <span>Логін</span>
-          <LogIn />
-        </Link>
-      }
-      nativeButton={false}
-    />
+    <Button variant="ghost">
+      <Image alt="avatar" src={auth.user.avatarUrl} width={16} height={16} />
+      <span className="truncate max-w-12">{auth.user.username}</span>
+    </Button>
   );
 };

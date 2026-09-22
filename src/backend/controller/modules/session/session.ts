@@ -22,7 +22,7 @@ export class sessionService {
       !request.cookies.has("refreshToken") &&
       !request.cookies.has("accessToken")
     ) {
-      throw new Error("no token found.");
+      throw new Error("Токен не знайдено.");
     }
 
     const fn = async (type: "access" | "refresh") => {
@@ -34,7 +34,7 @@ export class sessionService {
         )?.value;
 
         if (!token) {
-          throw new Error("token is not found at all.");
+          throw new Error("Токен не знайдено.");
         }
 
         // verifying the refresh token
@@ -50,11 +50,11 @@ export class sessionService {
         });
 
         if (!found) {
-          throw new Error("session not found in the database.");
+          throw new Error("Сеанс не знайдено в базі даних.");
         }
 
         if (!found.user) {
-          throw new Error("user is not found in the relation.");
+          throw new Error("Користувача не знайдено в базі даних.");
         }
 
         // verifying the hash
@@ -62,14 +62,14 @@ export class sessionService {
           type === "refresh" &&
           !(await bcrypt.compare(token, found.refreshTokenHash))
         ) {
-          throw new Error("jwt hash is not verified.");
+          throw new Error("Хеш JWT не перевірено.");
         }
 
         const { user, ...session } = found;
         return { user, session };
       } catch (e) {
         const message = e instanceof Error ? e.message : null;
-        throw new Error(message || "jwt token is not verified.");
+        throw new Error(message || "JWT-токен не перевірено.");
       }
     };
 

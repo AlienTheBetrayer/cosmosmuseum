@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuthForm } from "@/features/auth/hooks/useAuthForm";
 import {
   Button,
   Card,
@@ -12,7 +11,7 @@ import {
   CardTitle,
   Separator,
 } from "@/shared/ui";
-import Form from "@/shared/ui/form/form";
+import Form, { useZodForm } from "@/shared/ui/form/form";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,12 +21,24 @@ import axios from "axios";
 
 export default function SignupPage() {
   // form
-  const { form } = useAuthForm();
+  const { form } = useZodForm(contracts.auth.signup, {
+    defaultValues: {
+      email: "",
+      username: "",
+      password: "",
+    },
+  });
 
   const signup = useMutation({
     mutationFn: async (data: contracts.auth.Signup) => {
       const res = api.post("/api/auth/signup", data);
       return (await res).data;
+    },
+    onError: (e) => {
+      const err = axios.isAxiosError(e) ? e.response : undefined;
+      const field = err?.data?.errorData?.field;
+
+      form.setError(field, { message: err?.data.error });
     },
   });
 
@@ -51,19 +62,19 @@ export default function SignupPage() {
       <Form
         form={form}
         onSubmit={async (data) => {
-          try {
-            const result = (await signup.mutateAsync(
-              data,
-            )) as contracts.auth.SignupResponse;
-
-          } catch (e) {
-            const err = axios.isAxiosError(e) ? e.response : undefined;
-
-          }
+          (await signup.mutateAsync(data)) as contracts.auth.SignupResponse;
         }}
         className="flex flex-col gap-4"
       >
         <CardContent className="flex flex-col gap-4">
+          <Form.Input
+            name="username"
+            label="Псевдонім"
+            id="username"
+            description="Ваше ім'я користувача"
+            placeholder="Джон Доу"
+          />
+
           <Form.Input
             name="email"
             label="Пошта"

@@ -1,9 +1,9 @@
-import { password } from "@/backend/contracts/shared/auth";
+import { identifier, password } from "@/backend/contracts/shared/auth";
 import z from "zod";
 import { Db } from "../../../../prisma/db";
 
 export const login = z.object({
-  email: z.email(),
+  identifier: identifier,
   password: password,
 });
 

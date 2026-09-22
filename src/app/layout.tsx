@@ -3,6 +3,7 @@ import "../shared/styles/globals.css";
 import { MasterProvider } from "@/shared/ui";
 import { Header } from "@/features/ui/header/ui/Header";
 import { sfetch } from "@/shared/lib/fetch";
+import { contracts } from "@/backend";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,15 +16,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // auth hydration
-  const auth = await (await sfetch("/api/auth")).json();
-  console.log(auth);
+  let auth: contracts.auth.GetResponse | null = null;
+
+  try {
+    auth = (await (await sfetch("/api/auth")).json()).data;
+  } catch {
+    /** */
+  }
 
   // jsx
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="flex w-screen min-h-screen overflow-x-hidden">
         <MasterProvider>
-          <Header />
+          <Header auth={auth} />
 
           {children}
         </MasterProvider>

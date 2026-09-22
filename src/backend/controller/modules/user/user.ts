@@ -5,6 +5,8 @@ import { db } from "../../../../../prisma/db";
 import { nanoid } from "nanoid";
 import bcrypt from "bcryptjs";
 import { contracts } from "@/backend";
+import { AppError } from "@/backend/error/error";
+import { or } from "@prisma/orm-postgres/orm-client";
 
 export class userService {
   /**
@@ -22,7 +24,19 @@ export class userService {
     });
 
     if (found) {
-      throw new Error("user with that email already exists.");
+      throw new AppError("Користувач із такою електронною адресою вже існує.", {
+        field: "email",
+      });
+    }
+
+    const username = await db.Users.first({
+      username: body.username,
+    });
+
+    if (username) {
+      throw new AppError("Користувач із таким іменем уже існує.", {
+        field: "username",
+      });
     }
 
     // random cosmetics
@@ -39,8 +53,9 @@ export class userService {
 
     // creation
     const user = await db.Users.create({
-      id: nanoid(),
+      id: body.id ?? nanoid(),
       passwordHash,
+      username: body.username,
       email: body.email,
       avatarUrl: avatar.toDataUri(),
       color,
@@ -59,10 +74,10 @@ export class userService {
   static async find(
     body: contracts.user.Find,
   ): Promise<contracts.user.FindResponse> {
-    const user = await db.Users.first({
-      email: body.email,
-      username: body.username,
-    });
+    // user
+    const user = await db.Users.where((u) =>
+      or(u.email.eq(body), u.username.eq(body)),
+    ).first();
 
     return user;
   }

@@ -1,9 +1,11 @@
-import { password } from "@/backend/contracts/shared/auth";
+import { email, password, username } from "@/backend/contracts/shared/auth";
 import z from "zod";
 import { Db } from "../../../../prisma/db";
 
 export const create = z.object({
-  email: z.email(),
+  id: z.nanoid().optional(),
+  email: email,
+  username: username,
   password: password,
 });
 
