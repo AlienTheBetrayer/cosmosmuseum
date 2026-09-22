@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
 import z from "zod";
 import { db } from "../../../../../prisma/db";
-import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 
 export class jwtService {
@@ -23,22 +23,22 @@ export class jwtService {
    * @param schema (optional) custom schema to parse the token with
    * @returns
    */
-  static verify<T extends z.ZodObject = typeof this.defaultSchema>(
-    token: string,
-    key: string,
-    schema?: T,
-  ) {
+  static verify<T extends z.ZodObject = typeof this.defaultSchema>(body: {
+    token: string;
+    key: string;
+    schema?: T;
+  }) {
     // key
-    const processKey = process.env[key];
+    const processKey = process.env[body.key];
 
     if (!processKey) {
       throw new Error("process key is not found.");
     }
 
     // verifying
-    const payload = jwt.verify(token, processKey);
+    const payload = jwt.verify(body.token, processKey);
 
-    const verified = (schema ?? this.defaultSchema).safeParse(payload);
+    const verified = (body.schema ?? this.defaultSchema).safeParse(payload);
     if (!verified.success) {
       throw new Error(
         `failed validating token with a given schema. reason: ${verified.error.message}`,
@@ -54,14 +54,16 @@ export class jwtService {
    * @param key process.env key
    * @returns signed jwt token or null if the variable was not found
    */
-  static sign(payload: object, key: string) {
-    const variable = process.env[key];
+  static sign(body: { payload: object; key: string; expiryMs: number }) {
+    const variable = process.env[body.key];
 
     if (!variable) {
       return null;
     }
 
-    return jwt.sign(payload, variable);
+    return jwt.sign(body.payload, variable, {
+      expiresIn: body.expiryMs,
+    });
   }
 
   /**
@@ -86,25 +88,23 @@ export class jwtService {
       userId: body.userId,
     };
 
-    const tokens = {
-      access: jwt.sign(payload, "ACCESS_TOKEN_SECRET"),
-      refresh: jwt.sign(payload, "REFRESH_TOKEN_SECRET"),
-    };
+    const accessToken = jwt.sign(payload, "ACCESS_TOKEN_SECRET");
+    const refreshToken = jwt.sign(payload, "REFRESH_TOKEN_SECRET");
 
-    if (Object.values(tokens).some((token) => !token)) {
+    if (!accessToken || !refreshToken) {
       throw new Error("failed signing tokens.");
     }
 
     // hashing the refresh token
     const salt = await bcrypt.genSalt(10);
-    const refreshTokenHash = await bcrypt.hash(tokens.refresh, salt);
+    const refreshTokenHash = await bcrypt.hash(refreshToken, salt);
 
     // updating the session
     const updatedSession = await db.AuthSessions.where({
       id: session.id,
     }).update({ refreshTokenHash });
 
-    return { tokens, session: updatedSession! };
+    return { accessToken, refreshToken, session: updatedSession! };
   }
 
   /**
@@ -118,13 +118,88 @@ export class jwtService {
     token: string;
     expiryMs: number;
   }) {
-    const cookie = await cookies();
+    const cookieStore = await cookies();
 
-    cookie.set(body.name, body.token, {
+    cookieStore.set(body.name, body.token, {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
       maxAge: body.expiryMs,
     });
+  }
+
+  /**
+   * gets the cookie from the store
+   * @param name name of the cookie
+   * @returns cookie value or undefined if not found
+   */
+  static async getCookie(name: string ) {
+    const cookieStore = await cookies();
+    return cookieStore.get(name)?.value;
+  }
+
+  /**
+   * gets the raw versions of access and refresh tokens cookies
+   * @returns access and refresh tokens (or null if not found)
+   */
+  static async getAuthTokens() {
+    // getting the tokens
+    const accessToken = await this.getCookie("accessToken");
+    const refreshToken = await this.getCookie("refreshToken");
+
+    return { accessToken, refreshToken };
+  }
+
+  /**
+   * sets both auth tokens as a http-only cookie
+   * @param accessToken access token string
+   * @param refreshToken refresh token string
+   */
+  static async setHttpAuthTokens(body: {
+    accessToken: string;
+    refreshToken: string;
+  }) {
+    await this.setHttpCookie({
+      name: "accessToken",
+      token: body.accessToken,
+      expiryMs: 15 * 60 * 1000,
+    });
+
+    await this.setHttpCookie({
+      name: "refreshToken",
+      token: body.refreshToken,
+      expiryMs: 30 * 24 * 60 * 60 * 1000,
+    });
+  }
+
+  /**
+   * sets both tokens given a payload
+   * @param payload token payload
+   * @param request request object
+   * @param response response object
+   */
+  static async issueAuthTokens(body: { payload: object }) {
+    // signing tokens
+    const accessToken = this.sign({
+      payload: body.payload,
+      expiryMs: 15 * 60 * 1000,
+      key: "ACCESS_TOKEN_SECRET",
+    });
+
+    const refreshToken = this.sign({
+      payload: body.payload,
+      expiryMs: 30 * 24 * 60 * 60 * 1000,
+      key: "REFRESH_TOKEN_SECRET",
+    });
+
+    // validating
+    if (!accessToken || !refreshToken) {
+      throw new Error("failed signing tokens.");
+    }
+
+    // setting cookies
+    await this.setHttpAuthTokens({ accessToken, refreshToken });
+
+    return { accessToken, refreshToken };
   }
 }

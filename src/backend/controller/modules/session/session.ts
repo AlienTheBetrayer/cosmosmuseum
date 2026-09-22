@@ -1,8 +1,8 @@
-import { jwtService } from "@/backend/controller/modules/jwt";
 import bcrypt from "bcryptjs";
 import { db } from "../../../../../prisma/db";
 import { contracts } from "@/backend";
 import { nanoid } from "nanoid";
+import { modules } from "@/backend/controller";
 
 export class sessionService {
   /**
@@ -38,10 +38,11 @@ export class sessionService {
         }
 
         // verifying the refresh token
-        const verified = jwtService.verify(
+        const verified = modules.jwtService.verify({
           token,
-          type === "access" ? "ACCESS_TOKEN_SECRET" : "REFRESH_TOKEN_SECRET",
-        );
+          key:
+            type === "access" ? "ACCESS_TOKEN_SECRET" : "REFRESH_TOKEN_SECRET",
+        });
 
         const found = await db.AuthSessions.include("user").first({
           id: verified.sessionId,

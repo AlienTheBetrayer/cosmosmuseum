@@ -55,24 +55,13 @@ export class authService {
     const user = await this.verify(body);
 
     // issuing
-    const {
-      tokens: { access: accessToken, refresh: refreshToken },
-      session,
-    } = await modules.jwtService.issueAuthData({
-      userId: user.id,
-    });
+    const { accessToken, refreshToken, session } =
+      await modules.jwtService.issueAuthData({
+        userId: user.id,
+      });
 
     // setting
-    await modules.jwtService.setHttpCookie({
-      name: "accessToken",
-      token: accessToken,
-      expiryMs: 15 * 60 * 1000,
-    });
-    await modules.jwtService.setHttpCookie({
-      name: "refreshToken",
-      token: refreshToken,
-      expiryMs: 30 * 24 * 60 * 60 * 1000,
-    });
+    await modules.jwtService.setHttpAuthTokens({ accessToken, refreshToken })
 
     return { accessToken, refreshToken, user, session };
   }
