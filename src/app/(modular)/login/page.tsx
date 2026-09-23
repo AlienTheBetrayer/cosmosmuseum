@@ -1,6 +1,7 @@
 "use client";
 
-import { useAuthForm } from "@/features/auth/hooks/useAuthForm";
+import { contracts } from "@/backend";
+import { useLoginMutation } from "@/backend/tanstack/mutations/auth/useLoginMutation";
 import {
   Button,
   Card,
@@ -11,14 +12,23 @@ import {
   CardHeader,
   CardTitle,
   Separator,
+  Spinner,
 } from "@/shared/ui";
-import Form from "@/shared/ui/form/form";
+import Form, { useZodForm } from "@/shared/ui/form/form";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function LoginPage() {
   // form
-  const { form } = useAuthForm();
+  const { form } = useZodForm(contracts.auth.login, {
+    defaultValues: {
+      identifier: "",
+      password: "",
+    },
+  });
+
+  // mutation
+  const { login } = useLoginMutation(form);
 
   // jsx
   return (
@@ -38,14 +48,20 @@ export default function LoginPage() {
         </CardAction>
       </CardHeader>
 
-      <Form form={form} onSubmit={(data) => {}} className="flex flex-col gap-4">
+      <Form
+        form={form}
+        onSubmit={(data) => {
+          login.mutate(data);
+        }}
+        className="flex flex-col gap-4"
+      >
         <CardContent className="flex flex-col gap-4">
           <Form.Input
-            name="email"
-            label="Пошта"
-            id="email"
-            description="Ваша електронна пошта"
-            placeholder="m@email.com"
+            name="identifier"
+            label="Iдентифікатор"
+            id="identifier"
+            description="Ваша електронна пошта або псевдонiм"
+            placeholder="m@email.com / Джон Доу"
           />
 
           <Form.Input
@@ -58,7 +74,7 @@ export default function LoginPage() {
               <Button
                 variant="link"
                 render={
-                  <Link href="/forgot-password">
+                  <Link href="/code">
                     <span>Забули пароль?</span>
                   </Link>
                 }
@@ -69,7 +85,10 @@ export default function LoginPage() {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2">
-          <Form.Submit variant="outline">Логін</Form.Submit>
+          <Form.Submit variant="outline">
+            {login.isPending && <Spinner />}
+            <span>Логін</span>
+          </Form.Submit>
 
           <Separator />
 

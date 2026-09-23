@@ -1,6 +1,7 @@
 "use client";
 
-import { useAuthForm } from "@/features/auth/hooks/useAuthForm";
+import { contracts } from "@/backend";
+import { useCodeMutation } from "@/backend/tanstack/mutations/auth/useCodeMutation";
 import {
   Button,
   Card,
@@ -10,13 +11,21 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
+  Spinner,
 } from "@/shared/ui";
-import Form from "@/shared/ui/form/form";
+import Form, { useZodForm } from "@/shared/ui/form/form";
 import Link from "next/link";
 
 export default function ForgotPasswordPage() {
   // form
-  const { form } = useAuthForm();
+  const { form } = useZodForm(contracts.auth.code, {
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  // mutation
+  const { code } = useCodeMutation(form);
 
   // jsx
   return (
@@ -29,13 +38,19 @@ export default function ForgotPasswordPage() {
         <CardAction>
           <Button
             variant="link"
-            render={<Link href="/login">Логін</Link>}
+            render={<Link href="/forgot-password">Відновити пароль</Link>}
             nativeButton={false}
           />
         </CardAction>
       </CardHeader>
 
-      <Form form={form} onSubmit={(data) => {}} className="flex flex-col gap-4">
+      <Form
+        form={form}
+        onSubmit={(data) => {
+          code.mutate(data);
+        }}
+        className="flex flex-col gap-4"
+      >
         <CardContent className="flex flex-col gap-4">
           <Form.Input
             name="email"
@@ -44,18 +59,13 @@ export default function ForgotPasswordPage() {
             placeholder="m@email.com"
             description="Ваша електронна пошта"
           />
-
-          <Form.Input
-            name="password"
-            label="Пароль"
-            description="Новий пароль для вашого облікового запису"
-            id="password"
-            placeholder="••••••"
-          />
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2">
-          <Form.Submit>Відновити</Form.Submit>
+          <Form.Submit>
+            {code.isPending && <Spinner />}
+            <span>Відновити</span>
+          </Form.Submit>
         </CardFooter>
       </Form>
     </Card>

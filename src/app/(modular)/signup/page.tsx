@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuthForm } from "@/features/auth/hooks/useAuthForm";
 import {
   Button,
   Card,
@@ -11,14 +10,26 @@ import {
   CardHeader,
   CardTitle,
   Separator,
+  Spinner,
 } from "@/shared/ui";
-import Form from "@/shared/ui/form/form";
+import Form, { useZodForm } from "@/shared/ui/form/form";
 import Image from "next/image";
 import Link from "next/link";
+import { contracts } from "@/backend";
+import { useSignupMutation } from "@/backend/tanstack/mutations/auth/useSignupMutation";
 
 export default function SignupPage() {
   // form
-  const { form } = useAuthForm();
+  const { form } = useZodForm(contracts.auth.signup, {
+    defaultValues: {
+      email: "",
+      username: "",
+      password: "",
+    },
+  });
+
+  // mutation
+  const { signup } = useSignupMutation(form);
 
   // jsx
   return (
@@ -37,8 +48,22 @@ export default function SignupPage() {
         </CardAction>
       </CardHeader>
 
-      <Form form={form} onSubmit={(data) => {}} className="flex flex-col gap-4">
+      <Form
+        form={form}
+        onSubmit={(data) => {
+          signup.mutate(data);
+        }}
+        className="flex flex-col gap-4"
+      >
         <CardContent className="flex flex-col gap-4">
+          <Form.Input
+            name="username"
+            label="Псевдонім"
+            id="username"
+            description="Ваше ім'я користувача"
+            placeholder="Джон Доу"
+          />
+
           <Form.Input
             name="email"
             label="Пошта"
@@ -57,7 +82,10 @@ export default function SignupPage() {
         </CardContent>
 
         <CardFooter className="flex flex-col gap-2">
-          <Form.Submit variant="outline">Реєстрація</Form.Submit>
+          <Form.Submit variant="outline">
+            {signup.isPending && <Spinner />}
+            <span>Реєстрація</span>
+          </Form.Submit>
 
           <Separator />
 

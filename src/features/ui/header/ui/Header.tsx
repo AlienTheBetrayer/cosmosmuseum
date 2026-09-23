@@ -1,5 +1,6 @@
 "use client";
 
+import { contracts } from "@/backend";
 import { AuthButton } from "@/features/auth/ui/AuthButton";
 import { Menu } from "@/features/ui/header/ui/Menu";
 import { MiddleLinks } from "@/features/ui/header/ui/MiddleLinks";
@@ -11,7 +12,11 @@ import { AnimatePresence } from "motion/react";
 import Link from "next/link";
 import { useState } from "react";
 
-export const Header = () => {
+export const Header = ({
+  auth,
+}: {
+  auth: contracts.auth.GetResponse | null;
+}) => {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
 
   // jsx
@@ -25,7 +30,7 @@ export const Header = () => {
           </Link>
 
           <Button
-            variant="default"
+            variant={openMenu ? "destructive" : "default"}
             className="ml-auto md:hidden flex"
             onClick={() => setOpenMenu((prev) => !prev)}
           >
@@ -46,19 +51,20 @@ export const Header = () => {
             <MiddleLinks />
           </ul>
 
-          <div className="flex gap-1 items-center justify-self-end md:flex hidden">
-            <Socials />
-            <ThemeList />
+          <div className="flex gap-1 items-center justify-self-end">
+            <div className="flex gap-1 md:flex hidden">
+              <Socials />
+              <ThemeList />
+              <Separator orientation="vertical" className="h-6 my-auto mx-1" />
+            </div>
 
-            <Separator orientation="vertical" className="h-6 my-auto mx-1" />
-
-            <AuthButton />
+            <AuthButton auth={auth} />
           </div>
         </nav>
       </header>
 
       <AnimatePresence>
-        {openMenu && <Menu onClose={() => setOpenMenu(false)} />}
+        {openMenu && <Menu onClose={() => setOpenMenu(false)} auth={auth} />}
       </AnimatePresence>
     </>
   );

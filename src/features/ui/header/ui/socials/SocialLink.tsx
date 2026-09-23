@@ -17,7 +17,13 @@ export const SocialLink = ({
       variant="ghost"
       render={
         <Link href={href} target="_blank" rel="noopener noreferrer">
-          <Image alt="social" src={src} width={16} height={16} />
+          <Image
+            alt="social"
+            src={src}
+            width={16}
+            height={16}
+            className="grayscale-50"
+          />
           {children}
         </Link>
       }
