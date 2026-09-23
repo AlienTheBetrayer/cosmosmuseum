@@ -48,8 +48,12 @@ export class userService {
     });
 
     // hashing
-    const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(body.password, salt);
+    let passwordHash = null;
+
+    if (body.password) {
+      const salt = await bcrypt.genSalt();
+      passwordHash = await bcrypt.hash(body.password, salt);
+    }
 
     // creation
     const user = await db.Users.create({

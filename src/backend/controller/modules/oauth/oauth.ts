@@ -1,6 +1,17 @@
+import {
+  DiscordIdentity,
+  GoogleIdentity,
+} from "@/backend/controller/modules/oauth/types";
 import { NextRequest, NextResponse } from "next/server";
+import { db } from "../../../../../prisma/db";
+import { modules } from "@/backend/controller";
 
 export class oAuthService {
+  /**
+   * callback function for discord
+   * @param request request object
+   * @returns redirects + responses
+   */
   static async discordCallback(request: NextRequest) {
     const url = new URL(request.url);
 
@@ -8,11 +19,15 @@ export class oAuthService {
     const error = url.searchParams.get("error");
 
     if (error) {
-      throw new Error(`Discord OAuth error: ${error}`);
+      return NextResponse.redirect(
+        new URL(`/login?error=${error}`, request.url),
+      );
     }
 
     if (!code) {
-      throw new Error("Missing Discord authorization code.");
+      return NextResponse.redirect(
+        new URL(`/login?error=missing_code`, request.url),
+      );
     }
 
     const redirectUri = `${url.origin}/api/oauth/discord/callback`;
@@ -39,9 +54,9 @@ export class oAuthService {
     const tokens = await tokenResponse.json();
 
     if (!tokenResponse.ok) {
-      console.error("Discord token exchange failed:", tokens);
-
-      throw new Error("Failed to exchange Discord authorization code.");
+      return NextResponse.redirect(
+        new URL(`/login?error=token_exchange`, request.url),
+      );
     }
 
     // Get Discord user
@@ -54,21 +69,21 @@ export class oAuthService {
     const discordUser = await userResponse.json();
 
     if (!userResponse.ok) {
-      console.error("Discord user request failed:", discordUser);
-
-      throw new Error("Failed to retrieve Discord user.");
+      return NextResponse.redirect(
+        new URL(`/login?error=user_retrieval`, request.url),
+      );
     }
 
-    console.log("DISCORD USER:", discordUser);
-
-    // TODO:
-    // find/create your user
-    // create your AuthSession
-    // set your session cookie
+    await this.authenticate(discordUser);
 
     return NextResponse.redirect(url.origin);
   }
 
+  /**
+   * callback function for google
+   * @param request request object
+   * @returns redirects + responses
+   */
   static async googleCallback(request: NextRequest) {
     const { searchParams } = request.nextUrl;
 
@@ -105,11 +120,6 @@ export class oAuthService {
     });
 
     if (!tokenResponse.ok) {
-      console.error(
-        "Google token exchange failed:",
-        await tokenResponse.text(),
-      );
-
       return NextResponse.redirect(
         new URL("/login?error=google_token", request.url),
       );
@@ -128,8 +138,6 @@ export class oAuthService {
     );
 
     if (!userResponse.ok) {
-      console.error("Google userinfo failed:", await userResponse.text());
-
       return NextResponse.redirect(
         new URL("/login?error=google_user", request.url),
       );
@@ -137,10 +145,41 @@ export class oAuthService {
 
     const googleUser = await userResponse.json();
 
-    console.log("Google user:", googleUser);
-
-    // 3. YOUR AUTH LOGIC GOES HERE
+    await this.authenticate(googleUser);
 
     return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  /**
+   * authenticates a user retrieved from OAuth, creates session and sets tokens
+   * @param identity service identity
+   * @returns created session
+   */
+  static async authenticate(identity: GoogleIdentity | DiscordIdentity) {
+    // user creation
+    let user = await db.Users.where({ email: identity.email }).first();
+
+    const username =
+      "name" in identity
+        ? identity.name
+        : identity.username || identity.global_name;
+
+    if (!user) {
+      user = await modules.userService.create({
+        email: identity.email,
+        username,
+      });
+    }
+
+    // login
+    const { accessToken, refreshToken, session } =
+      await modules.jwtService.issueAuthData({
+        userId: user.id,
+      });
+
+    // setting
+    await modules.jwtService.setHttpAuthTokens({ accessToken, refreshToken });
+
+    return session;
   }
 }

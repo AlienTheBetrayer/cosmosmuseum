@@ -6,7 +6,7 @@ export const create = z.object({
   id: z.nanoid().optional(),
   email: email,
   username: username,
-  password: password,
+  password: password.optional(),
 });
 
 export type Create = z.infer<typeof create>;
