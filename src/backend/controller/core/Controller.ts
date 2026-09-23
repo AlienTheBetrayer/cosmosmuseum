@@ -12,6 +12,7 @@ export class Controller<TBody = unknown, TQuery = unknown> {
    */
   private pipeline: PipelineConfig = {
     auth: null,
+    notAuth: null,
     permission: null,
     bodySchema: null,
     querySchema: null,
@@ -29,6 +30,11 @@ export class Controller<TBody = unknown, TQuery = unknown> {
 
   public auth() {
     this.pipeline.auth = true;
+    return this;
+  }
+
+  public notAuth() {
+    this.pipeline.notAuth = true;
     return this;
   }
 
@@ -84,6 +90,17 @@ export class Controller<TBody = unknown, TQuery = unknown> {
           }));
         }
 
+        if (this.pipeline.notAuth) {
+          const verified = await modules.sessionService.verify({ request });
+          console.log("verified:D", verified);
+
+          if (verified) {
+            throw new Error(
+              "Цей шлях доступний тільки для неаутентифікованих користувачів.",
+            );
+          }
+        }
+
         // context constructing
         const context = {
           body,
@@ -96,7 +113,7 @@ export class Controller<TBody = unknown, TQuery = unknown> {
 
         // success
         const result = await fn(context);
-        
+
         if (result instanceof NextResponse) {
           return result;
         }
@@ -118,7 +135,8 @@ export class Controller<TBody = unknown, TQuery = unknown> {
         const appError = error instanceof AppError ? error : null;
 
         if (!appError) {
-          const message = error instanceof Error ? error.message : String(error);
+          const message =
+            error instanceof Error ? error.message : String(error);
 
           return NextResponse.json(
             { data: null, error: message },

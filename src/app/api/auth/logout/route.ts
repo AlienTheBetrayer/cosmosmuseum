@@ -5,7 +5,7 @@ import { revalidateTag } from "next/cache";
 
 export const POST = new Controller()
   .validateBody(contracts.auth.logout)
-  .permission(["user:create", "project:manage"])
+  .auth()
   .handle(async ({ body, user }) => {
     const success = await modules.authService.logout(body);
     revalidateTag("me", "max");

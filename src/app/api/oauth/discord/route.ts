@@ -1,7 +1,7 @@
 import { Controller } from "@/backend/controller/core/Controller";
 import { NextResponse } from "next/server";
 
-export const GET = new Controller().handle(async ({ body, user, request }) => {
+export const GET = new Controller().notAuth().handle(async ({ body, user, request }) => {
   // params
   const origin = new URL(request.url).origin;
 

@@ -22,7 +22,7 @@ export class sessionService {
       !request.cookies.has("refreshToken") &&
       !request.cookies.has("accessToken")
     ) {
-      throw new Error("Токен не знайдено.");
+      throw new Error("Користувач не аутентифікований.");
     }
 
     const fn = async (type: "access" | "refresh") => {
@@ -34,7 +34,7 @@ export class sessionService {
         )?.value;
 
         if (!token) {
-          throw new Error("Токен не знайдено.");
+          throw new Error("Користувач не аутентифікований.");
         }
 
         // verifying the refresh token
