@@ -2,7 +2,7 @@ import { contracts } from "@/backend";
 import { modules } from "@/backend/controller";
 import { AppError } from "@/backend/lib/error";
 import bcrypt from "bcryptjs";
-import { db } from "../../../../prisma/db";
+import { db } from "../../../../../prisma/db";
 
 export class authService {
   /**
@@ -127,16 +127,23 @@ export class authService {
    * @param code verification code
    * @returns true if succeded
    */
-  static async forgotPassword(body: contracts.auth.ForgotPassword): Promise<contracts.auth.ForgotPasswordResponse> {
+  static async forgotPassword(
+    body: contracts.auth.ForgotPassword,
+  ): Promise<contracts.auth.ForgotPasswordResponse> {
     // code validation
-    const code = await modules.verifyService.validateCode({ email: body.email, code: body.code });
+    const code = await modules.verifyService.validateCode({
+      email: body.email,
+      code: body.code,
+    });
 
     // password generation
     const salt = await bcrypt.genSalt();
     const password = await bcrypt.hash(body.password, salt);
 
     // password changing
-    await db.Users.where({ id: code.userId }).update({ passwordHash: password });
+    await db.Users.where({ id: code.userId }).update({
+      passwordHash: password,
+    });
 
     return true;
   }

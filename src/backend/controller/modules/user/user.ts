@@ -1,7 +1,7 @@
 import { random } from "@/backend/lib/random";
 import { Avatar, Style } from "@dicebear/core";
 import definition from "@dicebear/styles/identicon.json";
-import { db } from "../../../../prisma/db";
+import { db } from "../../../../../prisma/db";
 import { nanoid } from "nanoid";
 import bcrypt from "bcryptjs";
 import { contracts } from "@/backend";

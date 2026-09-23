@@ -96,6 +96,12 @@ export class Controller<TBody = unknown, TQuery = unknown> {
 
         // success
         const result = await fn(context);
+        
+        console.log(result);
+
+        if (result instanceof NextResponse) {
+          return result;
+        }
 
         return NextResponse.json(
           { data: result, error: null },
@@ -109,8 +115,6 @@ export class Controller<TBody = unknown, TQuery = unknown> {
             { status: 400 },
           );
         }
-
-        console.error(`ERROR!!`, error);
 
         // unknown error
         const appError = error instanceof AppError ? error : null;
