@@ -1,3 +1,4 @@
+import { contracts } from "@/backend";
 import { AuthButton } from "@/features/auth/ui/AuthButton";
 import { MiddleLinks } from "@/features/ui/header/ui/MiddleLinks";
 import { SocialLinksList } from "@/features/ui/header/ui/socials/SocialLinksList";
@@ -5,7 +6,7 @@ import { ThemeList } from "@/features/ui/themes/ui/ThemeList";
 import { Separator } from "@/shared/ui";
 import { motion } from "motion/react";
 
-export const Menu = ({ onClose }: { onClose: () => void }) => {
+export const Menu = ({ auth, onClose }: {   auth: contracts.auth.GetResponse | null, onClose: () => void }) => {
   return (
     <motion.div
       className="fixed w-screen h-full bg-black/50 backdrop-blur-[100px] z-11 overflow-hidden md:hidden"
@@ -40,7 +41,7 @@ export const Menu = ({ onClose }: { onClose: () => void }) => {
             </li>
 
             <li className="*:w-full [&_a]:p-8">
-              <AuthButton />
+              <AuthButton auth={auth} />
             </li>
           </ul>
         </li>

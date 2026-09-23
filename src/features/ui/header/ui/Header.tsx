@@ -64,7 +64,7 @@ export const Header = ({
       </header>
 
       <AnimatePresence>
-        {openMenu && <Menu onClose={() => setOpenMenu(false)} />}
+        {openMenu && <Menu onClose={() => setOpenMenu(false)} auth={auth} />}
       </AnimatePresence>
     </>
   );
