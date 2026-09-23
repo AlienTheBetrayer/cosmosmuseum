@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { nanoid } from "nanoid";
 import z from "zod";
-import { db } from "../../../../prisma/db";
+import { db } from "../../../../../prisma/db";
 import { cookies } from "next/headers";
 
 export class jwtService {

@@ -96,6 +96,10 @@ export class Controller<TBody = unknown, TQuery = unknown> {
 
         // success
         const result = await fn(context);
+        
+        if (result instanceof NextResponse) {
+          return result;
+        }
 
         return NextResponse.json(
           { data: result, error: null },
@@ -110,14 +114,14 @@ export class Controller<TBody = unknown, TQuery = unknown> {
           );
         }
 
-        console.error(`ERROR!!`, error);
-
         // unknown error
         const appError = error instanceof AppError ? error : null;
 
         if (!appError) {
+          const message = error instanceof Error ? error.message : String(error);
+
           return NextResponse.json(
-            { data: null, error: "Невідома помилка." },
+            { data: null, error: message },
             { status: 500 },
           );
         }

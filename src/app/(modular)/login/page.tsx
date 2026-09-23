@@ -17,6 +17,8 @@ import {
 import Form, { useZodForm } from "@/shared/ui/form/form";
 import Image from "next/image";
 import Link from "next/link";
+import { useQueryState } from "nuqs";
+import { useEffect } from "react";
 
 export default function LoginPage() {
   // form
@@ -29,6 +31,15 @@ export default function LoginPage() {
 
   // mutation
   const { login } = useLoginMutation(form);
+
+  // nuqs error
+  const [error, setError] = useQueryState("error");
+
+  useEffect(() => {
+    if (error) {
+      form.setError("password", { message: error });
+    }
+  }, [error]);
 
   // jsx
   return (
@@ -96,7 +107,7 @@ export default function LoginPage() {
             className="w-full"
             type="button"
             render={
-              <Link href="">
+              <a href="/api/oauth/google">
                 <Image
                   src="/logos/google.png"
                   alt="Google"
@@ -105,7 +116,7 @@ export default function LoginPage() {
                 />
 
                 <span>Продовжити з Google</span>
-              </Link>
+              </a>
             }
             nativeButton={false}
           />
@@ -114,7 +125,7 @@ export default function LoginPage() {
             className="w-full"
             type="button"
             render={
-              <Link href="">
+              <a href="/api/oauth/discord">
                 <Image
                   src="/logos/discord.png"
                   alt="Discord"
@@ -123,7 +134,7 @@ export default function LoginPage() {
                 />
 
                 <span>Продовжити з Discord</span>
-              </Link>
+              </a>
             }
             nativeButton={false}
           />

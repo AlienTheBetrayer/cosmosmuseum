@@ -1,7 +1,7 @@
 import { random } from "@/backend/lib/random";
 import { Avatar, Style } from "@dicebear/core";
 import definition from "@dicebear/styles/identicon.json";
-import { db } from "../../../../prisma/db";
+import { db } from "../../../../../prisma/db";
 import { nanoid } from "nanoid";
 import bcrypt from "bcryptjs";
 import { contracts } from "@/backend";
@@ -48,8 +48,12 @@ export class userService {
     });
 
     // hashing
-    const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(body.password, salt);
+    let passwordHash = null;
+
+    if (body.password) {
+      const salt = await bcrypt.genSalt();
+      passwordHash = await bcrypt.hash(body.password, salt);
+    }
 
     // creation
     const user = await db.Users.create({

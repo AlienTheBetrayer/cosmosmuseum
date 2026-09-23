@@ -1,6 +1,6 @@
 import { random } from "@/backend/lib/random";
 import { nanoid } from "nanoid";
-import { db } from "../../../../prisma/db";
+import { db } from "../../../../../prisma/db";
 import { modules } from "@/backend/controller";
 import { AppError } from "@/backend/lib/error";
 
@@ -20,7 +20,7 @@ export class verifyService {
       userId: user.id,
       expiryAt: Temporal.Now.instant().add({
         hours: 1,
-      })
+      }),
     });
 
     if (!verificationCode.code) {
@@ -50,7 +50,7 @@ export class verifyService {
     const status = await db.Codes.where({ userId: user.id, code: body.code })
       .where((p) => p.expiryAt.gte(Temporal.Now.instant()))
       .first();
-    
+
     // verification
     if (!status) {
       throw new AppError("Код перевірки недійсний.", { field: "code" });
