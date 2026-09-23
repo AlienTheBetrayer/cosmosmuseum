@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import "../../declare";
 import "../shared/styles/globals.css";
+import type { Metadata } from "next";
 import { MasterProvider } from "@/shared/ui";
 import { Header } from "@/features/ui/header/ui/Header";
 import { sfetch } from "@/shared/lib/fetch";
