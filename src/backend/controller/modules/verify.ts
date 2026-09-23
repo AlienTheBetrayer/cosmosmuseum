@@ -18,9 +18,9 @@ export class verifyService {
       id: nanoid(),
       code: random.string(6, "0123456789"),
       userId: user.id,
-      expiryAt: Temporal.Instant.fromEpochMilliseconds(
-        Date.now() + body.expiryMs,
-      ),
+      expiryAt: Temporal.Now.instant().add({
+        hours: 1,
+      })
     });
 
     if (!verificationCode.code) {
@@ -44,13 +44,13 @@ export class verifyService {
     const user = await db.Users.where({ email: body.email }).first();
 
     if (!user) {
-      throw new Error("Користувача не знайдено");
+      throw new AppError("Користувача не знайдено", { field: "email" });
     }
 
     const status = await db.Codes.where({ userId: user.id, code: body.code })
       .where((p) => p.expiryAt.gte(Temporal.Now.instant()))
       .first();
-
+    
     // verification
     if (!status) {
       throw new AppError("Код перевірки недійсний.", { field: "code" });

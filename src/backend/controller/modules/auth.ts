@@ -119,4 +119,25 @@ export class authService {
     });
     return true;
   }
+
+  /**
+   * recovers the password
+   * @param email email of the user
+   * @param password new password
+   * @param code verification code
+   * @returns true if succeded
+   */
+  static async forgotPassword(body: contracts.auth.ForgotPassword): Promise<contracts.auth.ForgotPasswordResponse> {
+    // code validation
+    const code = await modules.verifyService.validateCode({ email: body.email, code: body.code });
+
+    // password generation
+    const salt = await bcrypt.genSalt();
+    const password = await bcrypt.hash(body.password, salt);
+
+    // password changing
+    await db.Users.where({ id: code.userId }).update({ passwordHash: password });
+
+    return true;
+  }
 }

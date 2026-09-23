@@ -74,7 +74,7 @@ export default function LoginPage() {
               <Button
                 variant="link"
                 render={
-                  <Link href="/forgot-password">
+                  <Link href="/code">
                     <span>Забули пароль?</span>
                   </Link>
                 }
