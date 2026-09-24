@@ -16,6 +16,7 @@ import { SlidingText } from "@/shared/ui/animations/SlidingText";
 import { useState } from "react";
 import { ReactedButton } from "@/features/ui/cards/ui/overlay/ReactedButton";
 import { useAddReactionMutation } from "@/features/ui/cards/hooks/useAddReactionMutation";
+import { cn } from "cn";
 
 export const CardOverlay = ({
   idx,
@@ -45,8 +46,24 @@ export const CardOverlay = ({
       <Popover onOpenChange={setOpen} open={open}>
         <PopoverTrigger
           render={
-            <Button variant="ghost" className="bg-black/50 aspect-square">
-              <SlidingText list={emojis} />
+            <Button
+              variant="ghost"
+              className={cn(
+                "group relative aspect-square h-8 w-8 overflow-hidden rounded-full p-0",
+                "border border-white/10 bg-black/30 backdrop-blur-md",
+                "shadow-[0_2px_12px_rgba(0,0,0,0.25)]",
+                "transition-all duration-300",
+                "hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10",
+                "hover:shadow-[0_4px_18px_rgba(0,0,0,0.3)]",
+                "active:translate-y-0 active:scale-90",
+              )}
+            >
+              {/* subtle glow */}
+              <span className="pointer-events-none absolute inset-0 rounded-full bg-white/0 transition-all duration-300 group-hover:bg-white/10" />
+
+              <span className="relative flex h-full w-full items-center justify-center text-base">
+                <SlidingText list={emojis} />
+              </span>
             </Button>
           }
         />
