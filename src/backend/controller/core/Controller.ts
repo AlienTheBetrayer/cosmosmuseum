@@ -28,8 +28,8 @@ export class Controller<TBody = unknown, TQuery = unknown> {
     return this as unknown as Controller<TBody, T>;
   }
 
-  public auth() {
-    this.pipeline.auth = true;
+  public auth(config: { guard?: boolean } = { guard: true }) {
+    this.pipeline.auth = { enabled: true, guard: config.guard ?? false };
     return this;
   }
 
@@ -84,15 +84,23 @@ export class Controller<TBody = unknown, TQuery = unknown> {
         let user = null;
         let session = null;
 
-        if (this.pipeline.auth) {
-          ({ user, session } = await modules.sessionService.verify({
-            request,
-          }));
+        if (this.pipeline.auth?.enabled) {
+          try {
+            // will throw if not authenticated
+            ({ user, session } = await modules.sessionService.verify({
+              request,
+            }));
+          } catch {
+            if (this.pipeline.auth.guard) {
+              throw new Error(
+                "Цей шлях доступний тільки для аутентифікованих користувачів.",
+              );
+            }
+          }
         }
 
         if (this.pipeline.notAuth) {
           const verified = await modules.sessionService.verify({ request });
-          console.log("verified:D", verified);
 
           if (verified) {
             throw new Error(

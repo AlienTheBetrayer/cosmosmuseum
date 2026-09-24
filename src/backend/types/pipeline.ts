@@ -9,5 +9,5 @@ export type PipelineConfig = {
   querySchema: z.ZodType | null;
   permission: Permission[] | null;
   notAuth: boolean | null;
-  auth: boolean | null;
+  auth: { enabled: boolean, guard: boolean } | null;
 };

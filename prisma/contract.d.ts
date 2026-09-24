@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'10f73c6e4f9d76c1b0e3eb52a152d983a7f02f59e496ab409fc7386408e38531'>;
+  StorageHashBase<'7f0c0c1729b042c83026ba9cd7b4b70cc428263417f5ca0395bf9c155eba3288'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -256,6 +256,14 @@ export type FieldOutputTypes = {
       readonly expiryAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
     };
+    readonly Emojis: {
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly emoji: CodecTypes['pg/text@1']['output'];
+      readonly exhibitId: CodecTypes['pg/text@1']['output'];
+      readonly userId: CodecTypes['pg/text@1']['output'] | null;
+      readonly editedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    };
     readonly Users: {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
@@ -286,6 +294,14 @@ export type FieldInputTypes = {
       readonly code: CodecTypes['pg/text@1']['input'] | null;
       readonly expiryAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+    };
+    readonly Emojis: {
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly emoji: CodecTypes['pg/text@1']['input'];
+      readonly exhibitId: CodecTypes['pg/text@1']['input'];
+      readonly userId: CodecTypes['pg/text@1']['input'] | null;
+      readonly editedAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly Users: {
       readonly id: CodecTypes['pg/text@1']['input'];
@@ -318,6 +334,14 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly user_id: CodecTypes['pg/text@1']['output'];
     };
+    readonly emojis: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly edited_at: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly emoji: CodecTypes['pg/text@1']['output'];
+      readonly exhibit_id: CodecTypes['pg/text@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly user_id: CodecTypes['pg/text@1']['output'] | null;
+    };
     readonly users: {
       readonly avatar_url: CodecTypes['pg/text@1']['output'];
       readonly color: CodecTypes['pg/text@1']['output'];
@@ -349,6 +373,14 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly user_id: CodecTypes['pg/text@1']['input'];
     };
+    readonly emojis: {
+      readonly created_at: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly edited_at: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly emoji: CodecTypes['pg/text@1']['input'];
+      readonly exhibit_id: CodecTypes['pg/text@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly user_id: CodecTypes['pg/text@1']['input'] | null;
+    };
     readonly users: {
       readonly avatar_url: CodecTypes['pg/text@1']['input'];
       readonly color: CodecTypes['pg/text@1']['input'];
@@ -378,7 +410,8 @@ export namespace Models {
     createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     authSessions: public_AuthSessions[];
     codes: public_Codes[];
-    readonly [RelationKeys]?: 'authSessions' | 'codes';
+    emojis: public_Emojis[];
+    readonly [RelationKeys]?: 'authSessions' | 'codes' | 'emojis';
   };
   export type public_AuthSessions = {
     id: CodecTypes['pg/text@1']['output'];
@@ -399,6 +432,16 @@ export namespace Models {
     user: public_Users;
     readonly [RelationKeys]?: 'user';
   };
+  export type public_Emojis = {
+    id: CodecTypes['pg/text@1']['output'];
+    emoji: CodecTypes['pg/text@1']['output'];
+    exhibitId: CodecTypes['pg/text@1']['output'];
+    userId: CodecTypes['pg/text@1']['output'] | null;
+    editedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+    createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+    user: public_Users | null;
+    readonly [RelationKeys]?: 'user';
+  };
 }
 
 export declare const models: {
@@ -406,6 +449,7 @@ export declare const models: {
     Users: Models.public_Users;
     AuthSessions: Models.public_AuthSessions;
     Codes: Models.public_Codes;
+    Emojis: Models.public_Emojis;
   };
 };
 
@@ -531,6 +575,59 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly emojis: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly emoji: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly exhibit_id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly user_id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly edited_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: true;
+                };
+                readonly created_at: {
+                  readonly nativeType: 'timestamptz';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                  readonly nullable: false;
+                  readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'emojis_pkey' };
+              uniques: readonly [];
+              indexes: readonly [];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'emojis';
+                    readonly columns: readonly ['user_id'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'users';
+                    readonly columns: readonly ['id'];
+                  };
+                  readonly name: 'emojis_user_id_fkey';
+                },
+              ];
+            };
             readonly users: {
               columns: {
                 readonly id: {
@@ -610,6 +707,7 @@ type ContractBase = Omit<
       readonly model: 'AuthSessions';
     };
     readonly codes: { readonly namespace: 'public' & NamespaceId; readonly model: 'Codes' };
+    readonly emojis: { readonly namespace: 'public' & NamespaceId; readonly model: 'Emojis' };
   };
   readonly domain: {
     readonly namespaces: {
@@ -733,6 +831,66 @@ type ContractBase = Omit<
               };
             };
           };
+          readonly Emojis: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly emoji: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly exhibitId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly userId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly editedAt: {
+                readonly nullable: true;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+              readonly createdAt: {
+                readonly nullable: false;
+                readonly type: {
+                  readonly kind: 'scalar';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
+                };
+              };
+            };
+            readonly relations: {
+              readonly user: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Users';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: true;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'emojis';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly emoji: { readonly column: 'emoji' };
+                readonly exhibitId: { readonly column: 'exhibit_id' };
+                readonly userId: { readonly column: 'user_id' };
+                readonly editedAt: { readonly column: 'edited_at' };
+                readonly createdAt: { readonly column: 'created_at' };
+              };
+            };
+          };
           readonly Users: {
             readonly fields: {
               readonly id: {
@@ -801,6 +959,17 @@ type ContractBase = Omit<
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'Codes';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['userId'];
+                };
+              };
+              readonly emojis: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Emojis';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {

@@ -14,6 +14,7 @@ model Users {
   createdAt    Timestamptz    @default(now()) @map("created_at")
   authSessions AuthSessions[]
   codes        Codes[]
+  emojis       Emojis[]
 
   @@rls
   @@map("users")
@@ -42,4 +43,17 @@ model Codes {
 
   @@rls
   @@map("codes")
+}
+
+model Emojis {
+  id        String       @id(map: "emojis_pkey")
+  emoji     String
+  exhibitId String       @map("exhibit_id")
+  userId    String?      @map("user_id")
+  editedAt  Timestamptz? @map("edited_at")
+  createdAt Timestamptz  @default(now()) @map("created_at")
+  user      Users?       @relation(fields: [userId], references: [id], onDelete: SetNull, map: "emojis_user_id_fkey", index: false)
+
+  @@rls
+  @@map("emojis")
 }

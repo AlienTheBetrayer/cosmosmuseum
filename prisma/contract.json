@@ -12,6 +12,10 @@
       "model": "Codes",
       "namespace": "public"
     },
+    "emojis": {
+      "model": "Emojis",
+      "namespace": "public"
+    },
     "users": {
       "model": "Users",
       "namespace": "public"
@@ -187,6 +191,94 @@
               "table": "codes"
             }
           },
+          "Emojis": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "editedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "emoji": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "exhibitId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "userId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "user": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "userId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Users",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "created_at"
+                },
+                "editedAt": {
+                  "column": "edited_at"
+                },
+                "emoji": {
+                  "column": "emoji"
+                },
+                "exhibitId": {
+                  "column": "exhibit_id"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "userId": {
+                  "column": "user_id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "emojis"
+            }
+          },
           "Users": {
             "fields": {
               "avatarUrl": {
@@ -290,6 +382,21 @@
                   "model": "Codes",
                   "namespace": "public"
                 }
+              },
+              "emojis": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "userId"
+                  ]
+                },
+                "to": {
+                  "model": "Emojis",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
@@ -347,6 +454,11 @@
               "kind": "rls",
               "namespaceId": "public",
               "tableName": "codes"
+            },
+            "emojis": {
+              "kind": "rls",
+              "namespaceId": "public",
+              "tableName": "emojis"
             },
             "users": {
               "kind": "rls",
@@ -482,6 +594,72 @@
               },
               "uniques": []
             },
+            "emojis": {
+              "columns": {
+                "created_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "edited_at": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "emoji": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "exhibit_id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "user_id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                }
+              },
+              "foreignKeys": [
+                {
+                  "name": "emojis_user_id_fkey",
+                  "onDelete": "setNull",
+                  "source": {
+                    "columns": [
+                      "user_id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "emojis"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "users"
+                  }
+                }
+              ],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ],
+                "name": "emojis_pkey"
+              },
+              "uniques": []
+            },
             "users": {
               "columns": {
                 "avatar_url": {
@@ -568,7 +746,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "10f73c6e4f9d76c1b0e3eb52a152d983a7f02f59e496ab409fc7386408e38531"
+    "storageHash": "7f0c0c1729b042c83026ba9cd7b4b70cc428263417f5ca0395bf9c155eba3288"
   },
   "capabilities": {
     "postgres": {
