@@ -1,7 +1,7 @@
 "use client";
 
 import { contracts } from "@/backend";
-import { useLoginMutation } from "@/backend/tanstack/mutations/auth/useLoginMutation";
+import { useLoginMutation } from "@/features/auth/hooks/useLoginMutation";
 import {
   Button,
   Card,

@@ -31,7 +31,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="flex w-screen min-h-screen overflow-x-hidden">
-        <MasterProvider>
+        <MasterProvider auth={auth}>
           <Header auth={auth} />
 
           {children}

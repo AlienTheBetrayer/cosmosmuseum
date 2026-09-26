@@ -1,7 +1,7 @@
 "use client";
 
 import { contracts } from "@/backend";
-import { useLogoutMutation } from "@/backend/tanstack/mutations/auth/useLogoutMutation";
+import { useLogoutMutation } from "@/features/auth/hooks/useLogoutMutation";
 import {
   Button,
   Popover,

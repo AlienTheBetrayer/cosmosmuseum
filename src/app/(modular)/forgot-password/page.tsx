@@ -1,7 +1,7 @@
 "use client";
 
 import { contracts } from "@/backend";
-import { useForgotPasswordMutation } from "@/backend/tanstack/mutations/auth/useForgotPasswordMutation";
+import { useForgotPasswordMutation } from "@/features/auth/hooks/useForgotPasswordMutation";
 import {
   Button,
   Card,

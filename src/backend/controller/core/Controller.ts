@@ -100,12 +100,16 @@ export class Controller<TBody = unknown, TQuery = unknown> {
         }
 
         if (this.pipeline.notAuth) {
-          const verified = await modules.sessionService.verify({ request });
+          try {
+            const verified = await modules.sessionService.verify({ request });
 
-          if (verified) {
-            throw new Error(
-              "Цей шлях доступний тільки для неаутентифікованих користувачів.",
-            );
+            if (verified) {
+              throw new Error(
+                "Цей шлях доступний тільки для неаутентифікованих користувачів.",
+              );
+            }
+          } catch {
+            /* */
           }
         }
 

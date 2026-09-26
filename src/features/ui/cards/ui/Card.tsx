@@ -6,6 +6,7 @@ import { Shading } from "@/features/ui/cards/ui/effects/Shading";
 import { Starfield } from "@/features/ui/cards/ui/effects/Starfield";
 import { QRCodeDisplay } from "@/shared/ui/qrcodedisplay";
 import {
+  AnimatePresence,
   motion,
   useReducedMotion,
   useSpring,
@@ -139,7 +140,9 @@ export const Card = ({
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             <Shading shade={shade} glare={glare} />
 
-            <CardOverlay idx={idx} data={data} />
+            <AnimatePresence initial={false}>
+              <CardOverlay idx={idx} data={data} />
+            </AnimatePresence>
           </motion.div>
 
           <motion.div

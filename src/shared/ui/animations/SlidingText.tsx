@@ -31,21 +31,18 @@ export const SlidingText = ({ list }: { list: string[] }) => {
             opacity: 0,
             scale: 0.65,
             rotate: -12,
-            filter: "blur(5px)",
           }}
           animate={{
             y: 0,
             opacity: 1,
             scale: 1,
             rotate: 0,
-            filter: "blur(0px)",
           }}
           exit={{
             y: -18,
             opacity: 0,
             scale: 0.65,
             rotate: 12,
-            filter: "blur(5px)",
           }}
           transition={{
             y: {
@@ -66,9 +63,6 @@ export const SlidingText = ({ list }: { list: string[] }) => {
             },
             opacity: {
               duration: 0.16,
-            },
-            filter: {
-              duration: 0.2,
             },
           }}
         >
