@@ -63,7 +63,7 @@ export class userService {
       email: body.email,
       avatarUrl: avatar.toDataUri(),
       color,
-      lastSeenAt: Temporal.Now.instant(),
+      lastSeenAt: new Date()
     });
 
     return user;

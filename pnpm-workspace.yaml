@@ -2,4 +2,4 @@ allowBuilds:
   '@tsparticles/engine': true
   esbuild: set this to true or false
   msgpackr-extract: set this to true or false
-  workerd: set this to true or false
+  workerd: true
