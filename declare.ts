@@ -1,4 +1,4 @@
-import { Temporal } from 'temporal-polyfill';
+import { Temporal } from '@js-temporal/polyfill';
 
 // Safely attach it to the environment runtime without redefining the TS variable
 if (!globalThis.Temporal) {
