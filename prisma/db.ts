@@ -1,6 +1,5 @@
 import "server-only"
-
-
+import "temporal-polyfill/global"
 import postgres from "@prisma/orm-postgres/runtime";
 import type { Contract, FieldOutputTypes } from "./contract.d";
 import contractJson from "./contract.json" with { type: "json" };

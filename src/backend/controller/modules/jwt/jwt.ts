@@ -76,9 +76,7 @@ export class jwtService {
       id: nanoid(),
       user_id: body.userId,
       refresh_token_hash: "",
-      expiry_at: Temporal.Instant.fromEpochMilliseconds(
-        Date.now() + 30 * 24 * 60 * 60 * 1000,
-      ),
+      expiry_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     });
 
     // signing tokens

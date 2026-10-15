@@ -30,21 +30,21 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
               "editedAt": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
               "expiryAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -125,14 +125,14 @@
               "createdAt": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
               "expiryAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -196,14 +196,14 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
               "editedAt": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -298,14 +298,14 @@
               "createdAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
               "editedAt": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -326,7 +326,7 @@
               "lastSeenAt": {
                 "nullable": true,
                 "type": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "kind": "scalar"
                 }
               },
@@ -470,7 +470,7 @@
             "auth_sessions": {
               "columns": {
                 "created_at": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
                     "expression": "now()",
@@ -479,12 +479,12 @@
                   "nullable": false
                 },
                 "edited_at": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "nullable": true
                 },
                 "expiry_at": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "nullable": false
                 },
@@ -541,7 +541,7 @@
                   "nullable": true
                 },
                 "created_at": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
                     "expression": "now()",
@@ -550,7 +550,7 @@
                   "nullable": true
                 },
                 "expiry_at": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "nullable": false
                 },
@@ -597,7 +597,7 @@
             "emojis": {
               "columns": {
                 "created_at": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
                     "expression": "now()",
@@ -606,7 +606,7 @@
                   "nullable": false
                 },
                 "edited_at": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "nullable": true
                 },
@@ -673,7 +673,7 @@
                   "nullable": false
                 },
                 "created_at": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "default": {
                     "expression": "now()",
@@ -682,7 +682,7 @@
                   "nullable": false
                 },
                 "edited_at": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "nullable": true
                 },
@@ -697,7 +697,7 @@
                   "nullable": false
                 },
                 "last_seen_at": {
-                  "codecId": "pg/timestamptz-date@1",
+                  "codecId": "pg/timestamptz-string@1",
                   "dataType": "pg/timestamptz",
                   "nullable": true
                 },
@@ -746,7 +746,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "6e738ab0e73daf7ace043213c0443bc6dc2abdb74f8f5a3af3eb4da3039da8c7"
+    "storageHash": "c38a20b93e01cccc588b6b0c2eb10d80cefa54e18c7a3f98ce03edcd067bf259"
   },
   "capabilities": {
     "postgres": {

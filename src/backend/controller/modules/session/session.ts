@@ -95,7 +95,7 @@ export class sessionService {
       id: nanoid(),
       userId: body.user_id,
       refreshTokenHash: body.refresh_token_hash,
-      expiryAt: body.expiry_at,
+      expiryAt: body.expiry_at.toISOString()
     });
 
     return session;

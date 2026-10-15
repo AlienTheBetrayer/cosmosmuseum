@@ -18,9 +18,7 @@ export class verifyService {
       id: nanoid(),
       code: random.string(6, "0123456789"),
       userId: user.id,
-      expiryAt: Temporal.Now.instant().add({
-        hours: 1,
-      }),
+      expiryAt: new Date(Date.now() + 60 * 60 * 1000).toISOString()
     });
 
     if (!verificationCode.code) {
@@ -48,7 +46,7 @@ export class verifyService {
     }
 
     const status = await db.Codes.where({ userId: user.id, code: body.code })
-      .where((p) => p.expiryAt.gte(Temporal.Now.instant()))
+      .where((p) => p.expiryAt.gte(new Date().toISOString()))
       .first();
 
     // verification

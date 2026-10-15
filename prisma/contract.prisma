@@ -9,9 +9,9 @@ model Users {
   color        String
   avatarUrl    String             @map("avatar_url")
   status       String?
-  lastSeenAt   TimestamptzJsDate? @map("last_seen_at")
-  editedAt     TimestamptzJsDate? @map("edited_at")
-  createdAt    TimestamptzJsDate  @default(now()) @map("created_at")
+  lastSeenAt   TimestamptzString? @map("last_seen_at")
+  editedAt     TimestamptzString? @map("edited_at")
+  createdAt    TimestamptzString  @default(now()) @map("created_at")
   authSessions AuthSessions[]
   codes        Codes[]
   emojis       Emojis[]
@@ -24,9 +24,9 @@ model AuthSessions {
   id               String             @id(map: "auth_sessions_pkey")
   refreshTokenHash String             @map("refresh_token_hash")
   userId           String             @map("user_id")
-  editedAt         TimestamptzJsDate? @map("edited_at")
-  createdAt        TimestamptzJsDate  @default(now()) @map("created_at")
-  expiryAt         TimestamptzJsDate  @map("expiry_at")
+  editedAt         TimestamptzString? @map("edited_at")
+  createdAt        TimestamptzString  @default(now()) @map("created_at")
+  expiryAt         TimestamptzString  @map("expiry_at")
   user             Users              @relation(fields: [userId], references: [id], onDelete: Cascade, map: "auth_sessions_user_id_fkey", index: false)
 
   @@rls
@@ -37,8 +37,8 @@ model Codes {
   id        String             @id(map: "codes_pkey")
   userId    String             @map("user_id")
   code      String?
-  expiryAt  TimestamptzJsDate  @map("expiry_at")
-  createdAt TimestamptzJsDate? @default(now()) @map("created_at")
+  expiryAt  TimestamptzString  @map("expiry_at")
+  createdAt TimestamptzString? @default(now()) @map("created_at")
   user      Users              @relation(fields: [userId], references: [id], onDelete: Cascade, map: "codes_user_id_fkey", index: false)
 
   @@rls
@@ -50,8 +50,8 @@ model Emojis {
   emoji     String
   exhibitId String             @map("exhibit_id")
   userId    String?            @map("user_id")
-  editedAt  TimestamptzJsDate? @map("edited_at")
-  createdAt TimestamptzJsDate  @default(now()) @map("created_at")
+  editedAt  TimestamptzString? @map("edited_at")
+  createdAt TimestamptzString  @default(now()) @map("created_at")
   user      Users?             @relation(fields: [userId], references: [id], onDelete: SetNull, map: "emojis_user_id_fkey", index: false)
 
   @@rls

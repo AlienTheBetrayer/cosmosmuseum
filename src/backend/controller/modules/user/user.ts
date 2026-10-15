@@ -63,7 +63,7 @@ export class userService {
       email: body.email,
       avatarUrl: avatar.toDataUri(),
       color,
-      lastSeenAt: new Date()
+      lastSeenAt: new Date().toISOString()
     });
 
     return user;
