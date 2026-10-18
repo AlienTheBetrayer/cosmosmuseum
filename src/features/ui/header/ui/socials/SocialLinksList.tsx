@@ -7,19 +7,19 @@ const socials = [
     name: "Facebook",
     description: "Стежте за нами",
     icon: "/logos/facebook.png",
-    href: "#",
+    href: "https://www.facebook.com/cosmosmuseum/",
   },
   {
     name: "YouTube",
     description: "Дивіться наші відео",
     icon: "/logos/youtube.png",
-    href: "#",
+    href: "https://www.youtube.com/@SPACE_MUSEUM_ZT",
   },
   {
     name: "Instagram",
     description: "Дивіться, чим ми займаємося",
     icon: "/logos/instagram.png",
-    href: "#",
+    href: "https://www.instagram.com/_space_museum/",
   },
 ];
 
