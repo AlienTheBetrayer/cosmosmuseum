@@ -25,7 +25,7 @@ export const Cards = () => {
         Експонати
       </h2>
 
-      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full gap-4 p-15">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-full gap-4 p-1">
         {cardsList.map((card, idx) => (
           <li key={card.src}>
             <Card

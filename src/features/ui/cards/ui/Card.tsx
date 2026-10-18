@@ -148,9 +148,9 @@ export const Card = ({
           <motion.div
             inert={!flipped}
             className={faceClass}
-            style={{ z: -2, rotateY: 180, boxShadow: shadow }}
+            style={{ z: -2, rotateY: 180, boxShadow: shadow, display: "flex" }}
           >
-            <div className="flex h-full w-full items-center justify-center text-foreground">
+            <div className="flex h-8/12 aspect-square m-auto items-center justify-center text-foreground">
               <QRCodeDisplay
                 text={qrText}
                 size={100}
