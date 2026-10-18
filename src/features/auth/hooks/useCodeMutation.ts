@@ -30,5 +30,5 @@ export const useCodeMutation = (form: UseFormReturn<contracts.auth.Code>) => {
     },
   });
 
-  return useMemo(() => ({ code }), [login]);
+  return useMemo(() => ({ code }), [code]);
 };

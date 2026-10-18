@@ -32,5 +32,5 @@ export const useForgotPasswordMutation = (
     },
   });
 
-  return useMemo(() => ({ forgotPassword }), [login]);
+  return useMemo(() => ({ forgotPassword }), [forgotPassword]);
 };

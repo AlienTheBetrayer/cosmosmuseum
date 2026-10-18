@@ -26,6 +26,7 @@ export default function ForgotPasswordPage() {
 
   // mutation
   const { code } = useCodeMutation(form);
+  console.log(code.isPending);
 
   // jsx
   return (
